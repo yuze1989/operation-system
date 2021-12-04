@@ -43,76 +43,187 @@ export default {
                 index: "/dashboard",
                 title: "系统首页",
             },
-            {
-                icon: "el-icon-lx-cascades",
-                index: "/table",
-                title: "基础表格",
-            },
-            {
-                icon: "el-icon-lx-copy",
-                index: "/tabs",
-                title: "tab选项卡",
-            },
-            {
-                icon: "el-icon-lx-calendar",
-                index: "3",
-                title: "表单相关",
-                subs: [
-                    {
-                        index: "/form",
-                        title: "基本表单",
-                    },
-                    {
-                        index: "/upload",
-                        title: "文件上传",
-                    },
-                    {
-                        index: "4",
-                        title: "三级菜单",
-                        subs: [
-                            {
-                                index: "/editor",
-                                title: "富文本编辑器",
-                            },
-                        ],
-                    },
-                ],
-            },
-            {
-                icon: "el-icon-lx-emoji",
-                index: "/icon",
-                title: "自定义图标",
-            },
-            {
-                icon: "el-icon-pie-chart",
-                index: "/charts",
-                title: "schart图表",
-            },
-            {
-                icon: "el-icon-lx-global",
-                index: "/i18n",
-                title: "国际化功能",
-            },
-            {
-                icon: "el-icon-lx-warn",
-                index: "7",
-                title: "错误处理",
-                subs: [
-                    {
-                        index: "/permission",
-                        title: "权限测试",
-                    },
-                    {
-                        index: "/404",
-                        title: "404页面",
-                    },
-                ],
-            },
-            {
-                icon: "el-icon-lx-redpacket_fill",
-                index: "/donate",
-                title: "支持作者",
-            },
+          {
+            icon: "el-icon-lx-calendar",
+            index: "3",
+            title: "机构管理",
+            subs: [
+              {
+                index: "/",
+                title: "机构管理",
+              },
+              {
+                index: "/",
+                title: "机构参数管理",
+              },
+            ],
+          },
+          {
+            icon: "el-icon-lx-calendar",
+            index: "3",
+            title: "考试信息",
+            subs: [
+              {
+                index: "/",
+                title: "考试管理",
+              },
+              {
+                index: "/",
+                title: "考试监管",
+              },
+            ],
+          },
+          {
+            icon: "el-icon-lx-calendar",
+            index: "3",
+            title: "物流管理",
+            subs: [
+              {
+                index: "/",
+                title: "我要寄件",
+              },
+            ],
+          },
+          {
+            icon: "el-icon-lx-calendar",
+            index: "3",
+            title: "APP配置",
+            subs: [
+              {
+                index: "/",
+                title: "导航条配置",
+              },
+              {
+                index: "/",
+                title: "科目tab配置",
+              },
+              {
+                index: "/",
+                title: "banner配置",
+              },
+            ],
+          },
+          {
+            icon: "el-icon-lx-calendar",
+            index: "3",
+            title: "用户管理",
+            subs: [
+              {
+                index: "/",
+                title: "APP用户管理",
+              },
+              {
+                index: "/",
+                title: "系统角色管理",
+              },
+              {
+                index: "/",
+                title: "系统用户管理",
+              },
+            ],
+          },
+          {
+            icon: "el-icon-lx-calendar",
+            index: "3",
+            title: "订单列表",
+            subs: [
+              {
+                index: "/",
+                title: "订单管理",
+              },
+              {
+                index: "/",
+                title: "订单分析",
+              },
+              {
+                index: "/",
+                title: "退款",
+              },
+              {
+                index: "/",
+                title: "商品价格",
+              },
+            ],
+          },
+          {
+            icon: "el-icon-lx-calendar",
+            index: "3",
+            title: "操作日志",
+            subs: [
+              {
+                index: "/",
+                title: "操作日志",
+              },
+            ],
+          },
+          {
+            icon: "el-icon-lx-calendar",
+            index: "3",
+            title: "高校管理",
+            subs: [
+              {
+                index: "/",
+                title: "高校管理",
+              },
+            ],
+          },
+          {
+            icon: "el-icon-lx-calendar",
+            index: "3",
+            title: "历年考题",
+            subs: [
+              {
+                index: "/",
+                title: "历年考题",
+              },
+              {
+                index: "/",
+                title: "高分试卷",
+              },
+            ],
+          },
+          {
+            icon: "el-icon-lx-calendar",
+            index: "3",
+            title: "交易管理",
+            subs: [
+              {
+                index: "/",
+                title: "账号资金",
+              },
+              {
+                index: "/",
+                title: "考试费用",
+              },
+            ],
+          },
+          {
+            icon: "el-icon-lx-calendar",
+            index: "3",
+            title: "菜单管理",
+            subs: [
+              {
+                index: "/",
+                title: "考试系统菜单",
+              },
+              {
+                index: "/",
+                title: "易考绘菜单",
+              },
+            ],
+          },
+          {
+            icon: "el-icon-lx-calendar",
+            index: "3",
+            title: "系统管理",
+            subs: [
+              {
+                index: "/",
+                title: "APP版本更新",
+              },
+            ],
+          },
+
         ];
 
         const route = useRoute();

@@ -117,7 +117,7 @@ const routes = [
         meta: {
             title: '登录'
         },
-        component: () => import ( /* webpackChunkName: "login" */ "../views/Login.vue")
+        component: () => import ( /* webpackChunkName: "login" */ "../views/Login/index.vue")
     }
 ];
 
@@ -127,15 +127,15 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    document.title = `${to.meta.title} | vue-manage-system`;
-    const role = localStorage.getItem('ms_username');
+    document.title = `${to.meta.title} | 易考绘`;
+    const role = localStorage.getItem('nickName');
     if (!role && to.path !== '/login') {
         next('/login');
     } else if (to.meta.permission) {
-        // 如果是管理员权限则可进入，这里只是简单的模拟管理员权限而已
-        role === 'admin'
-            ? next()
-            : next('/403');
+        // // 如果是管理员权限则可进入，这里只是简单的模拟管理员权限而已
+        // role === 'admin'
+        //     ? next()
+        //     : next('/403');
     } else {
         next();
     }

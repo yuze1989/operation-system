@@ -4,24 +4,33 @@
             <div class="ms-title">后台管理系统</div>
             <el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content">
                 <el-form-item prop="username">
-                    <el-input v-model="param.username" placeholder="username">
+                    <el-input v-model="param.username" placeholder="请输入用户名">
                         <template #prepend>
                             <el-button icon="el-icon-user"></el-button>
                         </template>
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="password">
-                    <el-input type="password" placeholder="password" v-model="param.password"
-                        @keyup.enter="submitForm()">
+                    <el-input type="password" placeholder="请输入密码" v-model="param.password">
                         <template #prepend>
                             <el-button icon="el-icon-lock"></el-button>
                         </template>
                     </el-input>
                 </el-form-item>
+              <el-form-item prop="code">
+                <el-input type="text" placeholder="请输入验证码" v-model="param.code"
+                          @keyup.enter="submitForm()">
+                  <template #prepend>
+                    <el-button icon="el-icon-picture-outline"></el-button>
+                  </template>
+                  <template #append>
+                    <img :src="param.codeImg" alt="" @click="getCode">
+                  </template>
+                </el-input>
+              </el-form-item>
                 <div class="login-btn">
                     <el-button type="primary" @click="submitForm()">登录</el-button>
                 </div>
-                <p class="login-tips">Tips : 用户名和密码随便填。</p>
             </el-form>
         </div>
     </div>
@@ -32,15 +41,23 @@ import { ref, reactive } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
+import {Login, getLoginCode} from "../../api";
 
 export default {
     setup() {
         const router = useRouter();
         const param = reactive({
-            username: "admin",
-            password: "123123",
+            username: "",
+            password: "",
+            code:"",
+            codeImg:"",
+            imgKey:""
         });
 
+      getLoginCode().then(res=>{
+        param.codeImg =res.data.img;
+        param.imgKey = res.data.imgCodeKey;
+      });
         const rules = {
             username: [
                 {
@@ -52,16 +69,32 @@ export default {
             password: [
                 { required: true, message: "请输入密码", trigger: "blur" },
             ],
+            code: [
+              { required: true, message: "请输入验证码", trigger: "blur" },
+            ],
         };
         const login = ref(null);
         const submitForm = () => {
             login.value.validate((valid) => {
                 if (valid) {
-                    ElMessage.success("登录成功");
-                    localStorage.setItem("ms_username", param.username);
-                    router.push("/");
+                  // router.push("/");
+                  let data = {
+                    imgCode:param.code,
+                    imgCodeKey:param.imgKey,
+                    password:param.password,
+                    username:param.username,
+                  };
+                  Login(data).then(res=>{
+                    if(res.code == 200){
+                      localStorage.setItem("token",res.data.token);
+                      localStorage.setItem("nickName",res.data.user.username);
+                      ElMessage.success("登录成功");
+                      router.push("/dashboard");
+
+                    }
+                  })
                 } else {
-                    ElMessage.error("登录成功");
+                    ElMessage.error("请输入！");
                     return false;
                 }
             });
@@ -69,7 +102,6 @@ export default {
 
         const store = useStore();
         store.commit("clearTags");
-
         return {
             param,
             rules,
@@ -77,15 +109,29 @@ export default {
             submitForm,
         };
     },
+methods:{
+      getCode(){
+        getLoginCode().then(res=>{
+          this.param.codeImg =res.data.img;
+          this.param.imgKey = res.data.imgCodeKey;
+        });
+      },
+}
 };
 </script>
 
+<style>
+.ms-login .el-input-group__append{
+  padding: 0;
+  cursor: pointer;
+}
+</style>
 <style scoped>
 .login-wrap {
     position: relative;
     width: 100%;
     height: 100%;
-    background-image: url(../assets/img/login-bg.jpg);
+    background-image: url(../../assets/img/login-bg.jpg);
     background-size: 100%;
 }
 .ms-title {
