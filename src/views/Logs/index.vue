@@ -31,11 +31,9 @@
 </template>
 
 <script>
-import Schart from "vue-schart";
 import { reactive } from "vue";
 export default {
     name: "logs",
-    components: { Schart },
     setup() {
         const tableData = reactive([
             {
