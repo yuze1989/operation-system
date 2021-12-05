@@ -109,7 +109,14 @@ const routes = [
                     title: '富文本编辑器'
                 },
                 component: () => import (/* webpackChunkName: "editor" */ '../views/Editor.vue')
-            }
+            }, {
+                path: "/logs",
+                name: "logs",
+                meta: {
+                    title: '操作日志'
+                },
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/Logs/index.vue")
+            }, 
         ]
     }, {
         path: "/login",

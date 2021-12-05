@@ -151,7 +151,7 @@ export default {
             title: "操作日志",
             subs: [
               {
-                index: "/",
+                index: "/logs",
                 title: "操作日志",
               },
             ],
