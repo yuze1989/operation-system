@@ -44,12 +44,12 @@ export default {
                 title: "系统首页",
             },
           {
-            icon: "el-icon-lx-calendar",
-            index: "3",
+            icon: "el-icon-star-off",
+            index: "2",
             title: "机构管理",
             subs: [
               {
-                index: "/",
+                index: "/school",
                 title: "机构管理",
               },
               {
@@ -75,7 +75,7 @@ export default {
           },
           {
             icon: "el-icon-lx-calendar",
-            index: "3",
+            index: "4",
             title: "物流管理",
             subs: [
               {
@@ -85,8 +85,8 @@ export default {
             ],
           },
           {
-            icon: "el-icon-lx-calendar",
-            index: "3",
+            icon: "el-icon-apple",
+            index: "5",
             title: "APP配置",
             subs: [
               {
@@ -98,18 +98,18 @@ export default {
                 title: "科目tab配置",
               },
               {
-                index: "/",
+                index: "/banner",
                 title: "banner配置",
               },
             ],
           },
           {
-            icon: "el-icon-lx-calendar",
-            index: "3",
+            icon: "el-icon-user",
+            index: "6",
             title: "用户管理",
             subs: [
               {
-                index: "/",
+                index: "/appUser",
                 title: "APP用户管理",
               },
               {
@@ -117,18 +117,18 @@ export default {
                 title: "系统角色管理",
               },
               {
-                index: "/",
+                index: "/sysUser",
                 title: "系统用户管理",
               },
             ],
           },
           {
-            icon: "el-icon-lx-calendar",
-            index: "3",
+            icon: "el-icon-printer",
+            index: "7",
             title: "订单列表",
             subs: [
               {
-                index: "/",
+                index: "/OrderList",
                 title: "订单管理",
               },
               {
@@ -147,7 +147,7 @@ export default {
           },
           {
             icon: "el-icon-lx-calendar",
-            index: "3",
+            index: "8",
             title: "操作日志",
             subs: [
               {
@@ -158,7 +158,7 @@ export default {
           },
           {
             icon: "el-icon-lx-calendar",
-            index: "3",
+            index: "9",
             title: "高校管理",
             subs: [
               {
@@ -169,7 +169,7 @@ export default {
           },
           {
             icon: "el-icon-lx-calendar",
-            index: "3",
+            index: "10",
             title: "历年考题",
             subs: [
               {
@@ -184,7 +184,7 @@ export default {
           },
           {
             icon: "el-icon-lx-calendar",
-            index: "3",
+            index: "11",
             title: "交易管理",
             subs: [
               {
@@ -199,7 +199,7 @@ export default {
           },
           {
             icon: "el-icon-lx-calendar",
-            index: "3",
+            index: "12",
             title: "菜单管理",
             subs: [
               {
@@ -214,7 +214,7 @@ export default {
           },
           {
             icon: "el-icon-lx-calendar",
-            index: "3",
+            index: "13",
             title: "系统管理",
             subs: [
               {

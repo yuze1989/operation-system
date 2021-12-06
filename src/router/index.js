@@ -116,7 +116,47 @@ const routes = [
                     title: '操作日志'
                 },
                 component: () => import ( /* webpackChunkName: "logs" */ "../views/Logs/index.vue")
-            }, 
+            },
+            {
+                path: "/banner",
+                name: 'banner',
+                meta: {
+                    title: 'banner配置'
+                },
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/APP/banner.vue")
+            },
+            {
+                path: "/school",
+                name: 'school',
+                meta: {
+                    title: '机构配置'
+                },
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/School/list.vue")
+            },
+            {
+                path: "/appUser",
+                name: 'appUser',
+                meta: {
+                    title: 'APP用户管理'
+                },
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/User/app.vue")
+            },
+            {
+                path: "/sysUser",
+                name: 'sysUser',
+                meta: {
+                    title: '系统用户管理'
+                },
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/User/sys.vue")
+            },
+            {
+                path: "/OrderList",
+                name: 'OrderList',
+                meta: {
+                    title: '订单管理'
+                },
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/Order/list.vue")
+            },
         ]
     }, {
         path: "/login",

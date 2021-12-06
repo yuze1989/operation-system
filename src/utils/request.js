@@ -8,6 +8,9 @@ const service = axios.create({
 
 service.interceptors.request.use(
     config => {
+        if(config.isLogin){
+            config.headers['SYS_TOKEN'] = localStorage.getItem('token');
+        }
         return config;
     },
     error => {

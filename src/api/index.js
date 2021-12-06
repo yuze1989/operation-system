@@ -18,12 +18,5 @@ export const Login = query => {
     });
 };
 
-export const fetchData = query => {
-    return request({
-        url: './table.json',
-        method: 'get',
-        params: query
-    });
-};
 
 
