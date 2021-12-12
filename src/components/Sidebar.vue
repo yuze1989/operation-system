@@ -173,11 +173,19 @@ export default {
             title: "历年考题",
             subs: [
               {
-                index: "/",
+                index: "/examination/subjectTabConfigure",
+                title: "科目tab配置",
+              },
+              {
+                index: "/examination/sideConfigure",
+                title: "历年考题菜单配置",
+              },
+              {
+                index: "/examination/history",
                 title: "历年考题",
               },
               {
-                index: "/",
+                index: "/examination/highScorePaper",
                 title: "高分试卷",
               },
             ],
@@ -218,7 +226,7 @@ export default {
             title: "系统管理",
             subs: [
               {
-                index: "/",
+                index: "/settings/update",
                 title: "APP版本更新",
               },
             ],

@@ -109,7 +109,8 @@ const routes = [
                     title: '富文本编辑器'
                 },
                 component: () => import (/* webpackChunkName: "editor" */ '../views/Editor.vue')
-            }, {
+            }, 
+            {
                 path: "/logs",
                 name: "logs",
                 meta: {
@@ -118,45 +119,125 @@ const routes = [
                 component: () => import ( /* webpackChunkName: "logs" */ "../views/Logs/index.vue")
             },
             {
-                path: "/banner",
-                name: 'banner',
+                path: "/examination/subjectTabConfigure",
+                name: "subjectTabConfigure",
                 meta: {
-                    title: 'banner配置'
+                    title: '科目tab配置'
                 },
-                component: () => import ( /* webpackChunkName: "logs" */ "../views/APP/banner.vue")
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/examination/subjectTabConfigure/index.vue")
             },
             {
-                path: "/school",
-                name: 'school',
+                path: "/examination/subjectTabConfigure/new",
+                name: "newSubjectTabConfigure",
                 meta: {
-                    title: '机构配置'
+                    title: '新增科目'
                 },
-                component: () => import ( /* webpackChunkName: "logs" */ "../views/School/list.vue")
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/examination/subjectTabConfigure/new.vue")
             },
             {
-                path: "/appUser",
-                name: 'appUser',
+                path: "/examination/sideConfigure",
+                name: "sideConfigure",
                 meta: {
-                    title: 'APP用户管理'
+                    title: '历年考题菜单配置'
                 },
-                component: () => import ( /* webpackChunkName: "logs" */ "../views/User/app.vue")
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/examination/sideConfigure/index.vue")
             },
             {
-                path: "/sysUser",
-                name: 'sysUser',
+                path: "/examination/sideConfigure/new",
+                name: "newSideConfigure",
                 meta: {
-                    title: '系统用户管理'
+                    title: '历年考题菜单配置'
                 },
-                component: () => import ( /* webpackChunkName: "logs" */ "../views/User/sys.vue")
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/examination/sideConfigure/new.vue")
             },
             {
-                path: "/OrderList",
-                name: 'OrderList',
+                path: "/examination/history",
+                name: "history",
                 meta: {
-                    title: '订单管理'
+                    title: '历年考题'
                 },
-                component: () => import ( /* webpackChunkName: "logs" */ "../views/Order/list.vue")
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/examination/history/index.vue")
             },
+            {
+                path: "/examination/history/new",
+                name: "newHistory",
+                meta: {
+                    title: '新增历年考题'
+                },
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/examination/history/new.vue")
+            },
+            {
+                path: "/examination/highScorePaper",
+                name: "highScorePaper",
+                meta: {
+                    title: '高分试卷'
+                },
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/examination/highScorePaper/index.vue")
+            },
+            {
+                path: "/examination/highScorePaper/new",
+                name: "newHighScorePaper",
+                meta: {
+                    title: '高分试卷'
+                },
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/examination/highScorePaper/new.vue")
+            },
+            {
+                path: "/settings/update",
+                name: "update",
+                meta: {
+                    title: 'app版本更新'
+                },
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/settings/update/index.vue")
+            },
+            {
+                path: "/settings/update/new",
+                name: "newUpdate",
+                meta: {
+                    title: '新增版本'
+                },
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/settings/update/new.vue")
+            },
+            // {
+            //     path: "/banner",
+            //     name: 'banner',
+            //     meta: {
+            //         title: 'banner配置'
+            //     },
+            //     component: () => import ( /* webpackChunkName: "logs" */ "../views/APP/banner.vue")
+            // },
+            // {
+            //     path: "/school",
+            //     name: 'school',
+            //     meta: {
+            //         title: '机构配置'
+            //     },
+            //     component: () => import ( /* webpackChunkName: "logs" */ "../views/School/list.vue")
+            // },
+            // {
+            //     path: "/appUser",
+            //     name: 'appUser',
+            //     meta: {
+            //         title: 'APP用户管理'
+            //     },
+            //     component: () => import ( /* webpackChunkName: "logs" */ "../views/User/app.vue")
+            // },
+            // {
+            //     path: "/sysUser",
+            //     name: 'sysUser',
+            //     meta: {
+            //         title: '系统用户管理'
+            //     },
+            //     component: () => import ( /* webpackChunkName: "logs" */ "../views/User/sys.vue")
+            // },
+            // {
+            //     path: "/OrderList",
+            //     name: 'OrderList',
+            //     meta: {
+            //         title: '订单管理'
+            //     },
+            //     component: () => import ( /* webpackChunkName: "logs" */ "../views/Order/list.vue")
+            // },
         ]
     }, {
         path: "/login",
