@@ -167,6 +167,14 @@ const routes = [
                 component: () => import ( /* webpackChunkName: "logs" */ "../views/examination/history/new.vue")
             },
             {
+                path: "/examination/history/examine",
+                name: "examineHistory",
+                meta: {
+                    title: '新增历年考题'
+                },
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/examination/history/examine.vue")
+            },
+            {
                 path: "/examination/highScorePaper",
                 name: "highScorePaper",
                 meta: {

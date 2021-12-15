@@ -82,9 +82,72 @@ export const deleteMenu = query => {
 // 历年考题列表
 export const getHistoryList = query => {
     return request({
-        url: '/sys/history/examNew/list',
+        url: '/sys/history-exam-v2/list',
         method: 'post',
         data: query,
         isLogin: true
     })
 }
+
+// 主办方tag列表
+
+export const getSponsorList = query => {
+    return request({
+        url: '/sys/history/examNew/menu/tag',
+        method: 'post',
+        data: query,
+        isLogin: true
+    })
+}
+
+// 科目下拉列表
+// /sys/history/examNew/subject/selectors
+export const getSubjectSelectors = query => {
+    return request({
+        url: '/sys/history/examNew/subject/selectors',
+        method: 'get',
+        data: query,
+        isLogin: true
+    })
+}
+
+// 上传文件
+export const uploadImage = query => {
+    return request({
+        url: '/sys/file/imageUpload',
+        method: 'post',
+        data: query,
+        name: 'file',
+        isLogin: true
+    })
+}
+
+// 新增历史考题
+export const createHistoryExam = query => {
+    return request({
+        url: '/sys/history-exam-v2/save',
+        method: 'post',
+        data: query,
+        isLogin: true
+    })
+}
+
+// 删除历史考题
+export const deleteHistoryExam = query => {
+    return request({
+        url: `/sys/history-exam-v2/delete/${query.id}`,
+        method: 'delete',
+        isLogin: true
+    })
+}
+
+// 审核
+export const updateAuditStatus = query => {
+    return request({
+        url: '/sys/history-exam-v2/updateAuditStatus',
+        method: 'post',
+        data: query, 
+        isLogin: true
+    })
+}
+
