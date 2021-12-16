@@ -10,10 +10,10 @@
                             <el-select v-model="params.type" clearable
                                 name="type" @change="changeSelector($event)" placeholder="请选择考题类型">
                                 <el-option
-                                    v-for="(type, index) in examType"
+                                    v-for="(item, index) in examType"
                                     :key="index"
-                                    :label="type"
-                                    :value="type">
+                                    :label="item.name"
+                                    :value="item.type">
                                 </el-option>
                             </el-select>
                         </el-col>
@@ -28,6 +28,7 @@
                             <el-date-picker
                                 v-model="params.year"
                                 type="year"
+                                value-format="YYYY"
                                 placeholder="选择考题年份">
                             </el-date-picker>
                         </el-col>
@@ -54,7 +55,10 @@
                         </el-col>
                     </el-row>
                 </div>
-                <el-button type="primary" @click="createHistory">新增历年考题</el-button>
+                <el-row :gutter="20">
+                    <!-- <el-col :span="3"><el-button type="primary" @click="batchAuditStatus">批量审核</el-button></el-col> -->
+                    <el-col :span="3"><el-button type="primary" @click="createHistory">新增历年考题</el-button></el-col>
+                </el-row>
                 <el-table
                     :data="tableData"
                     v-loading="loading"
@@ -71,7 +75,7 @@
                     <el-table-column prop="year" width="100" label="考题年份"></el-table-column>
                     <el-table-column prop="type" width="100" label="考试类型">
                         <template class="template" v-slot="scope">
-                            {{examType[scope.row.type]}}
+                            {{examType[scope.row.type]['name']}}
                         </template>
                     </el-table-column>
                     <el-table-column prop="name" label="考试名称"></el-table-column>
@@ -83,10 +87,10 @@
                     </el-table-column>
                     <el-table-column label="操作">
                         <template class="template" v-slot="scope">
-                            <el-button type="text" size="mini" href="javascript:void(0);" @click="deleteSubject(scope)">修改</el-button>
-                            <el-button type="text" size="mini" href="javascript:void(0);" @click="deleteExam(scope)">删除</el-button>
-                            <el-button type="text" size="mini" href="javascript:void(0);" @click="reviewExam(scope)">审核</el-button>
-                            <el-button type="text" size="mini" href="javascript:void(0);" @click="deleteSubject(scope)">新增高分试卷</el-button>
+                            <!-- <el-button type="text" size="mini" @click="editExam(scope)">修改</el-button> -->
+                            <el-button type="text" size="mini" @click="deleteExam(scope)">删除</el-button>
+                            <el-button type="text" size="mini" @click="reviewExam(scope)">审核</el-button>
+                            <el-button type="text" size="mini" @click="createPaper(scope)">新增高分试卷</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -112,7 +116,7 @@ export default {
         let name   = localStorage.getItem("ms_username");
         let router = useRouter();
         let statusData = ref(['未审核', '通过', '不通过']) ;  // 审核状态 0-未审核 1-通过 2-不通过
-        let examType   = ref(['高考', '模考'])//考试类型 0-模考 1-高考
+        let examType   = ref([{type: '0', name: '模考'}, {type: '1', name: '高考'}]); // 考试类型 0-模考 1-高考
         let params = reactive({
             name: '',           // 机构名称
             type: '',           // 考试类型
@@ -157,10 +161,11 @@ export default {
         // 查询
         searchExam() {
             console.log(this.params)
+            this.getExamData()
         },
         changeCurrent(page){
             console.log('changeCurrent', page)
-            this.getSubjectData(page)
+            this.getExamData(page)
         },
         changeValue(e) {
             console.log('changevalue', this.params) 
@@ -170,11 +175,15 @@ export default {
             // this.params.type = e;
             // console.log('changeSelector', this.params)
         },
-        getSubjectData(page, size) {
+        getExamData(page) {
             this.loading = true;
-            getSubjectList().then(res => {
+            getHistoryList({
+                ...this.params,
+                page,
+                size: 10
+            }).then(res => {
                 this.loading = false
-                console.log('getSubjectList', res)
+                console.log('getHistoryList', res)
                 let {pages, records, total} = res.data
                 this.tableData = records
                 this.pageTotal = pages
@@ -208,6 +217,15 @@ export default {
         reviewExam(scope) {
             let {$index, row} = scope
             this.router.push(`/examination/history/examine?id=${row.id}`)
+        },
+        // 修改
+        editExam(scope) {
+            let {$index, row} = scope
+            this.router.push(`/examination/history/detail?id=${row.id}`)
+        },
+        // 去新增高分试卷
+        createPaper() {
+            this.router.push('/examination/highScorePaper/new')
         }
     }
 };

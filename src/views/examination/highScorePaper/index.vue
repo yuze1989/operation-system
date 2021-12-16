@@ -4,59 +4,52 @@
             <el-col :span="24">
                 <div class="title">高分试卷信息</div>
                 <div class="paper-condition">
-                    <el-row>
-                        <el-col :span="6" :offset="4">
-                            考试类型：
-                            <el-select v-model="params.type" clearable
-                                name="type" @change="changeSelector($event)" placeholder="请选择考题类型">
-                                <el-option
-                                    v-for="(type, index) in typeList"
-                                    :key="index"
-                                    :label="type"
-                                    :value="type">
-                                </el-option>
-                            </el-select>
-                        </el-col>
-                        <el-col :span="6" :offset="2">
+                    <el-row :gutter="10">
+                        <el-col :span="5" :offset="7">
                             机构名称：
-                            <el-input v-model="params.secondMenu" data-name="secondMenu" @input="changeValue" placeholder="请输入内容" ></el-input>
+                            <el-input type="text" v-model="params.schoolName" placeholder="机构名称"></el-input>
                         </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="6" :offset="4">
-                            考题年份：
-                            <el-select v-model="params.type" clearable
-                                name="type" @change="changeSelector($event)" placeholder="请选择考题类型">
-                                <el-option
-                                    v-for="(type, index) in typeList"
-                                    :key="index"
-                                    :label="type"
-                                    :value="type">
-                                </el-option>
-                            </el-select>
-                        </el-col>
-                        <el-col :span="6" :offset="2">
+                        <el-col :span="5">
                             主办方归属：
-                            <el-input v-model="params.secondMenu" data-name="secondMenu" @input="changeValue" placeholder="请输入内容" ></el-input>
+                            <el-input v-model="params.firstMenuName" data-name="secondMenu" @input="changeValue" placeholder="请输入内容" ></el-input>
                         </el-col>
                     </el-row>
-                    <el-row>
-                        <el-col :span="6" :offset="4">
+                    <el-row :gutter="10">
+                        <el-col  :span="5" :offset="7">
+                            考题年份：
+                            <el-date-picker
+                                v-model="params.year"
+                                type="year"
+                                value-format="YYYY"
+                                placeholder="选择年">
+                            </el-date-picker>
+                        </el-col>
+                        <el-col  :span="5">
                             考试科目：
-                            <el-select v-model="params.type" clearable
-                                name="type" @change="changeSelector($event)" placeholder="请选择考题类型">
+                            <el-select v-model="params.subjectId" clearable
+                                @change="changeSelector($event)" placeholder="请选择考题类型">
                                 <el-option
-                                    v-for="(type, index) in typeList"
+                                    v-for="(item, index) in subjectList"
                                     :key="index"
-                                    :label="type"
-                                    :value="type">
+                                    :label="item.name"
+                                    :value="item.id">
                                 </el-option>
                             </el-select>
                         </el-col>
-                        <el-col :span="6" :offset="2">
-                            考试题目：
-                            <el-input v-model="params.secondMenu" data-name="secondMenu" @input="changeValue" placeholder="请输入内容" ></el-input>
+                    </el-row>
+                    <el-row :gutter="10">
+                        <el-col :span="5" :offset="7">
+                            试卷价格：
+                            <el-input class="price-input" type="text" v-model="params.priceMin" placeholder="金额"></el-input>
+                            <el-input class="price-input" v-model="params.priceMax" @input="changeValue" placeholder="金额" ></el-input>
                         </el-col>
+                        <el-col :span="5">
+                            考试题目：
+                            <el-input v-model="params.title" data-name="secondMenu" @input="changeValue" placeholder="请输入内容" ></el-input>
+                        </el-col>
+                    </el-row>
+                    <el-row type="flex" justify="center">
+                        <el-button type="primary" @click="searchPaper">查询</el-button>
                     </el-row>
                 </div>
                 <div>
@@ -69,24 +62,52 @@
                     border
                     stripe
                     style="width: 100%">
+                    <!-- 
+                        auditStatus	integer($int32) 审核状态 0-未审核 1-通过 2-不通过
+                            createTime	string($date-time) 创建时间
+                            favoriteCount	integer($int64) 收藏数
+                            firstMenuName	string 主办方归属
+                            hdImg	string 高清图
+                            id	integer($int64)
+                            price	string 价格
+                            schoolId	integer($int32) 机构id
+                            schoolName	string 机构名称
+                            secondMenuName	string 主办方名称
+                            subjectName	string 科目名称
+                            title	string 考试题目
+                            type	integer($int32) 考试类型 0-模考 1-高考 2-top美考 
+                            viewCount	integer($int64) 浏览量
+                     -->
+                    <el-table-column type="selection" label="序号"></el-table-column>
                     <el-table-column type="index" label="序号"></el-table-column>
-                    <el-table-column prop="name" label="机构ID"></el-table-column>
-                    <el-table-column prop="name" label="机构名称"></el-table-column>
-                    <el-table-column prop="name" label="考试类型"></el-table-column>
-                    <el-table-column prop="name" label="主办方归属"></el-table-column>
-                    <el-table-column prop="name" label="考题年份"></el-table-column>
-                    <el-table-column prop="name" label="考试类型"></el-table-column>
-                    <el-table-column prop="name" label="考试名称"></el-table-column>
-                    <el-table-column prop="name" label="考试科目"></el-table-column>
-                    <el-table-column prop="name" label="考试题目"></el-table-column>
-                    <el-table-column prop="name" label="审核状态"></el-table-column>
+                    <el-table-column prop="schoolId" label="机构ID"></el-table-column>
+                    <el-table-column prop="schoolName" label="机构名称"></el-table-column>
+                    <el-table-column prop="type" label="考试类型">
+                        <template v-slot="scope">
+                            {{examType[scope.row.type]}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="firstMenuName" label="主办方归属"></el-table-column>
+                    <el-table-column prop="secondMenuName" label="主办方归属"></el-table-column>
+                    <el-table-column prop="subjectName" label="考题科目"></el-table-column>
+                    <el-table-column prop="hdImg" label="试卷图片">
+                        <template v-slot="scope">
+                            <el-image style="width: 100px; height: 100px" :src="scope.row.hdImg" fit="fill"></el-image>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="favoriteCount" label="收藏次数"></el-table-column>
+                    <el-table-column prop="viewCount" label="浏览次数"></el-table-column>
+                    <el-table-column prop="createTime" label="创建时间"></el-table-column>
+                    <el-table-column prop="name" label="审核状态">
+                        <template v-slot="scope">
+                            {{auditStatus[scope.row.auditStatus]}}
+                        </template>
+                    </el-table-column>
                     <el-table-column label="操作">
                         <template class="template" v-slot="scope">
-                            <el-button type="text" size="mini" href="javascript:void(0);" @click="deleteSubject(scope)">修改</el-button>
-                            <el-button type="text" size="mini" href="javascript:void(0);" @click="deleteSubject(scope)">删除</el-button>
-                            <el-button type="text" size="mini" href="javascript:void(0);" @click="deleteSubject(scope)">审核</el-button>
-                            <!-- <el-button type="primary" size="mini" href="javascript:void(0);" @click="deleteSubject(scope)">审核</el-button>
-                            <el-button type="danger" size="mini" href="javascript:void(0);" @click="deleteSubject(scope)">删除</el-button> -->
+                            <!-- <el-button type="text" size="mini" @click="deleteSubject(scope)">修改</el-button> -->
+                            <el-button type="text" size="mini" @click="deletePaperHandle(scope)">删除</el-button>
+                            <el-button type="text" size="mini" v-if="scope.row.auditStatus == 0" @click="auditHandle(scope)">审核</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -105,7 +126,7 @@
 <script>
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-import {getSubjectList} from '@/api/exam'
+import { paperList, getSubjectSelectors, deletePaper} from '@/api/exam'
 export default {
     name: "highScorePaper",
     setup() {
@@ -113,11 +134,20 @@ export default {
         let router = useRouter();
         
         let params = reactive({
-            firstMenu: '',
-            secondMenu: '',
-            type: ''
+            auditStatus: '',
+            current: 1,
+            size: 10,
+            firstMenuName: '',
+            priceMax: '',
+            priceMin: '',
+            schoolName: '',
+            subjectId: '',
+            title: '',
+            year: ''
         })
-        let typeList      = reactive(['高考', '模考']) 
+        let examType = ref(['模考', '高考', 'top美考']) // 考试类型 0-模考 1-高考 2-top美考 
+        let auditStatus = ref(['未审核', '通过', '不通过']) // auditStatus	integer($int32) 审核状态 0-未审核 1-通过 2-不通过
+        let subjectList   = ref([])
         let loading       = ref(true);
         let tableData     = ref([])
         let pageTotal     = ref(0)
@@ -126,42 +156,53 @@ export default {
         let createHighPaper = (e) => {
             router.push('/examination/highScorePaper/new')
         }
-        getSubjectList().then(res => {
+        // 考试科目
+        getSubjectSelectors().then(res => {
+            console.log(res)
+            let {code, msg} = res
+            if(code === 200) subjectList.value = res.data
+        })
+        paperList(params).then(res => {
             loading.value = false
             console.log('getSubjectList', res)
-            let {pages, data, total} = res
-            tableData.value = data
+            let {pages, records, total} = res.data
+            tableData.value = records
             pageTotal.value = pages
             listTotal.value = total
         })
 
         return {
             name,
+            router,
             tableData,
             loading,
             pageTotal,
             listTotal,
             createHighPaper,
             params,
-            typeList
+            subjectList,
+            examType,
+            auditStatus
         };
     },
     methods: {
         changeCurrent(page){
             console.log('changeCurrent', page)
-            this.getSubjectData(page)
+            this.getPaperList(page)
         },
         changeValue(e) {
             console.log('changevalue', this.params) 
         },
         changeSelector(e) {
             console.log(e)
-            this.params.type = e;
             console.log('changeSelector', this.params)
         },
-        getSubjectData(page, size) {
+        getPaperList(page) {
             this.loading = true;
-            getSubjectList().then(res => {
+            paperList({
+                ...this.params,
+                current: page || 1
+            }).then(res => {
                 this.loading = false
                 console.log('getSubjectList', res)
                 let {pages, records, total} = res.data
@@ -170,25 +211,34 @@ export default {
                 this.listTotal = total
             })
         },
+        // 查询
+        searchPaper(){
+            this.getPaperList()
+        },
         // 删除科目
-        deleteSubject(e) {
-            console.log(e)
-            this.$confirm('确定要删除历年考题?', '提示', {
+        deletePaperHandle(scope) {
+            let {$index, row} = scope
+            console.log($index, row)
+            this.$confirm('确定删除?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning',
                 center: true
             }).then(() => {
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                });
+                deletePaper(row.id).then(res => {
+                    if(res?.code === 200) {
+                        this.$message({ type: 'success', message: '删除成功!' });
+                        this.tableData.splice($index, 1);
+                    }
+                })
             }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                });
+                this.$message({ type: 'info', message: '已取消删除' });
             });
+        },
+        // 审核
+        auditHandle(scope) {
+            let {$index, row} = scope
+            this.router.push(`/examination/highScorePaper/examine?id=${row.id}`)
         }
     }
 };
@@ -231,8 +281,14 @@ export default {
     justify-content: space-between;
     align-items: center;
 }
-.paper-condition .el-col .el-input{
-    width: 200px !important;
+.paper-condition .el-col .el-input,
+.paper-condition .el-col .el-select,
+.paper-condition .el-col .el-date-editor
+{
+    width: 200px;
+}
+.paper-condition .el-col .price-input{
+    width: 100px;
 }
 .paper-condition .el-col .el-date-editor.el-input{
     width: 200px;

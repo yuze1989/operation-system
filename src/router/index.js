@@ -170,9 +170,17 @@ const routes = [
                 path: "/examination/history/examine",
                 name: "examineHistory",
                 meta: {
-                    title: '新增历年考题'
+                    title: '审核历年考题'
                 },
                 component: () => import ( /* webpackChunkName: "logs" */ "../views/examination/history/examine.vue")
+            },
+            {
+                path: "/examination/history/detail",
+                name: "examineHistoryDetail",
+                meta: {
+                    title: '编辑历年考题'
+                },
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/examination/history/detail.vue")
             },
             {
                 path: "/examination/highScorePaper",
@@ -191,6 +199,14 @@ const routes = [
                 component: () => import ( /* webpackChunkName: "logs" */ "../views/examination/highScorePaper/new.vue")
             },
             {
+                path: "/examination/highScorePaper/examine",
+                name: "examineHighScorePaper",
+                meta: {
+                    title: '高分试卷-审核'
+                },
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/examination/highScorePaper/examine.vue")
+            },
+            {
                 path: "/settings/update",
                 name: "update",
                 meta: {
@@ -205,6 +221,22 @@ const routes = [
                     title: '新增版本'
                 },
                 component: () => import ( /* webpackChunkName: "logs" */ "../views/settings/update/new.vue")
+            },
+            {
+                path: "/schoolManage",
+                name: "schoolManage",
+                meta: {
+                    title: '高校管理'
+                },
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/schoolManage/index.vue")
+            },
+            {
+                path: "/schoolManage/new",
+                name: "newSchoolManage",
+                meta: {
+                    title: '新增高校'
+                },
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/schoolManage/new.vue")
             },
             // {
             //     path: "/banner",

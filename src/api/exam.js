@@ -154,6 +154,14 @@ export const createHistoryExam = query => {
         isLogin: true
     })
 }
+// 历史考题详情
+export const historyExamDetail = id => {
+    return request({
+        url: `/sys/history-exam-v2/detail/${id}`,
+        method: 'get',
+        isLogin: true
+    })
+}
 
 // 删除历史考题
 export const deleteHistoryExam = query => {
@@ -174,3 +182,46 @@ export const updateAuditStatus = query => {
     })
 }
 
+// 高分试卷
+// 列表
+// /sys/history-paper-v2/list
+export const paperList = query => {
+    return request({
+        url: '/sys/history-paper-v2/list',
+        method: 'post',
+        data: query,
+        isLogin: true
+    })
+}
+
+// 删除高分试卷
+// /sys/history-paper-v2/delete/{id}
+export const deletePaper = id => {
+    return request({
+        url: `/sys/history-paper-v2/delete/${id}`,
+        method: 'delete',
+        isLogin: true
+    })
+}
+
+// 获取题目id
+// /sys/history-paper-v2/getQuestionId/{examId}
+export const questionList = examId => {
+    console.log('exam', examId)
+    return request({
+        url: `/sys/history-paper-v2/getQuestionId/${examId}`,
+        method: 'get',
+        isLogin: true
+    })
+}
+
+// 新增高分试卷
+// /sys/history-paper-v2/save
+export const createPaper = query => {
+    return request({
+        url: '/sys/history-paper-v2/save',
+        method: 'post',
+        data: query,
+        isLogin: true
+    })
+}

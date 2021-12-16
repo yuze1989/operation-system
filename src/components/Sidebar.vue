@@ -162,7 +162,7 @@ export default {
             title: "高校管理",
             subs: [
               {
-                index: "/",
+                index: "/schoolManage",
                 title: "高校管理",
               },
             ],

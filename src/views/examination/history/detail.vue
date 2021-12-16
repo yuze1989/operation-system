@@ -128,9 +128,6 @@
                                     :on-remove="(file, fileList) => handleRemove(file, fileList, index)">
                                     <i class="el-icon-plus"></i>
                                 </el-upload>
-                                <el-dialog v-model="dialogVisible">
-                                    <img width="100%" :src="dialogImageUrl" alt="">
-                                </el-dialog>
                             </div>
                         </el-col>
                         <el-col class="subject-item">
@@ -157,11 +154,11 @@
 </template>
 
 <script>
-import { reactive, ref, toRefs } from "vue";
+import { onMounted, reactive, ref, toRefs } from "vue";
 import { useRouter } from "vue-router";
-import { getSponsorList, getSubjectSelectors, uploadImage, createHistoryExam } from '@/api/exam'
+import { getSponsorList, getSubjectSelectors, createHistoryExam, historyExamDetail } from '@/api/exam'
 export default {
-    name: "newHistory",
+    name: "examineHistoryDetail",
     setup() {
         let name   = localStorage.getItem("ms_username");
         let token   = localStorage.getItem("token");
@@ -173,11 +170,6 @@ export default {
             {type: '0', value: '高考'},
             {type: '1', value: '模考'},
         ])
-        let dialog = reactive({
-            dialogImageUrl: '',
-            dialogVisible: false,
-            disabled: false
-        })
         let limitPictureNumber = ref(50)
         let pictureList = ref([])
         let params = reactive({
@@ -202,6 +194,17 @@ export default {
             remarks: ''
         }])
 
+        onMounted(() => {
+            console.log(router)
+            let query = router.currentRoute.value.query
+            examDetail(query.id)
+        })
+        // 获取详情
+        let examDetail = (id) => {
+            historyExamDetail(id).then(res => {
+                console.log(res)
+            })
+        }
         // 获取科目列表
         getSubjectSelectors().then(res => {
             console.log('getSubjectSelectors', res)
@@ -221,7 +224,7 @@ export default {
             subjectSelectors,
             pictureList,
             limitPictureNumber,
-            ...toRefs(dialog)
+            historyExamDetail 
         };
     },
     methods: {
