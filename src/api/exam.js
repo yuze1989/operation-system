@@ -23,6 +23,15 @@ export const createSubject = query => {
         isLogin: true
     })
 }
+// 批量添加科目
+export const createBatchSubject = query => {
+    return request({
+        url: '/sys/history/examNew/subject/add/batch',
+        method: 'post',
+        data: query,
+        isLogin: true
+    })
+}
 
 // 修改科目
 export const editSubject = query => {
@@ -49,10 +58,15 @@ export const deleteSubject = query => {
 // 获取菜单列表
 // type是考试类型 0-模考 1-高考
 export const getMenuList = query => {
-    console.log(query)
+//     "current": 1,
+//   "levelOneName": "string",
+//   "levelTwoName": "string",
+//   "size": 10,
+//   "type": 0
     return request({
-        url: `/sys/history/examNew/menu/${query.type}`,
-        method: 'get',
+        url: '/sys/history/examNew/menu/list',
+        method: 'post',
+        data: query,
         isLogin: true
     })
 }
@@ -61,6 +75,15 @@ export const getMenuList = query => {
 export const createMenu = query => {
     return request({
         url: '/sys/history/examNew/menu/add',
+        method: 'post',
+        data: query,
+        isLogin: true
+    })
+}
+// 批量添加菜单
+export const createBatchMenu = query => {
+    return request({
+        url: '/sys/history/examNew/menu/addOrUpdate/batch',
         method: 'post',
         data: query,
         isLogin: true

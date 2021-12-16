@@ -24,7 +24,7 @@
 <script>
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-import { createSubject } from '@/api/exam'
+import { createSubject, createBatchSubject } from '@/api/exam'
 export default {
     name: "newSubjectTabConfigure",
     setup() {
@@ -55,8 +55,11 @@ export default {
                 _txtArray.push(item.txt)
             })
             console.log('_txtArray', _txtArray, _txtArray.join(','))
-            createSubject({
-                name: _txtArray.join(',')
+            // createSubject({
+            //     name: _txtArray.join(',')
+            // }).then(res => {
+            createBatchSubject({
+                names: _txtArray
             }).then(res => {
                 console.log('object', res)
                 let {code, data, msg} = res

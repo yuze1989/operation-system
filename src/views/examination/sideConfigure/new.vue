@@ -10,20 +10,20 @@
                             <el-option
                                 v-for="item in typeLists"
                                 :key="item.type"
-                                :label="item.name"
+                                :label="item.value"
                                 :value="item.type">
                             </el-option>
                         </el-select>
                     </div>
                     <div v-for="(item, index) in createSideMenu" :key="index" class="content-item">
                         <span class="tit">一级菜单</span>
-                        <input type="text" placeholder="请输入一级菜单名称" v-model="item.txt">
+                        <input type="text" placeholder="请输入一级菜单名称" v-model="item.name">
                         <el-button size="mini" @click="removeMenu(index)" :data-index="index" v-if="index !== 0">移除</el-button>
                         <el-button size="mini" @click="addSecondMenu" :data-index="index">添加二级菜单</el-button>
-                        <div class="children-content" v-if="item.sub.length">
-                            <div class="sub-item" v-for="(child, i) in item.sub" :key="i">
+                        <div class="children-content" v-if="item.levelTwo.length">
+                            <div class="sub-item" v-for="(child, i) in item.levelTwo" :key="i">
                                 <span class="c-tit">二级菜单</span>
-                                <input type="text" placeholder="请输入二级菜单名称" v-model="child.txt">
+                                <input type="text" placeholder="请输入二级菜单名称" v-model="child.name">
                                 <el-button size="mini" @click="removeMenu(index, i, 'second')" :data-index="i">移除</el-button>
                                 <el-button size="mini" @click="addSecondMenu" :data-index="index">添加</el-button>
                             </div>
@@ -44,17 +44,20 @@
 <script>
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-import { createMenu } from '@/api/exam'
+import { createMenu, createBatchMenu } from '@/api/exam'
 export default {
     name: "newSideConfigure",
     setup() {
-        let createSideMenu = ref([{txt: '', sub: []}])
-        let selectType     = ref(0)
+        let createSideMenu = ref([{name: '', levelTwo: []}])
+        let router         = useRouter();
+        let selectType     = ref('')
         let typeLists      = ref([
-            { type: 0, name: '高考'},
-            { type: 1, name: '模考'}
+            { type: 0, value: '模考'},
+            { type: 1, value: '高考'},
+            { type: 2, value: 'Top美考'}
         ])
         return {
+            router,
             createSideMenu,
             typeLists,
             selectType
@@ -62,23 +65,23 @@ export default {
     },
     methods: {
         addFirstMenu() {
-            this.createSideMenu.push({txt: '', sub: []})
+            this.createSideMenu.push({name: '', levelTwo: []})
         },
         addSecondMenu(e) {
             let { index } = e.currentTarget.dataset,
                 _data     = this.createSideMenu;
             console.log(e, index, _data[index])
-            _data[index]['sub']['push']({txt: ''})
+            _data[index]['levelTwo']['push']({name: ''})
             this.createSideMenu.value = _data
         },
         removeMenu(index, i, type) {
             console.log(index, i, type)
             if(type) {
                 // 删除二级菜单
-                let { sub } = this.createSideMenu[index]
-                console.log('object', sub)
-                sub.splice(i, 1)
-                this.createSideMenu[index]['sub'] = sub
+                let { levelTwo } = this.createSideMenu[index]
+                console.log('object', levelTwo)
+                levelTwo.splice(i, 1)
+                this.createSideMenu[index]['levelTwo'] = levelTwo
             } else {
                 // 删除一级菜单
                 this.createSideMenu.splice(i, 1)
@@ -87,14 +90,18 @@ export default {
         // 保存菜单
         saveMenus() {
             console.log(this.createSideMenu, this.selectType)
-            // createMenu({
-                //parentId, name, type
-                //type: this.selectType,
-                // parentId: 
-                // name: 
-            // }).then(res => {
-
-            // })
+            this.createSideMenu.forEach((menu, index, array) => array[index]['type'] = this.selectType )
+            let params = {
+                levelOne: this.createSideMenu
+            }
+            console.log(params)
+            createBatchMenu(params).then(res => {
+                console.log(res)
+                if(res.code === 200) {
+                    this.router.push('/examination/sideConfigure')
+                    this.$message({ type: 'success', message: '删除成功!' })
+                }
+            })
         }
     }
 };

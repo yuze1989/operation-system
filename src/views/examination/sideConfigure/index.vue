@@ -7,11 +7,11 @@
                     <el-row>
                         <el-col :span="6" :offset="4">
                             一级菜单：
-                            <el-input v-model="params.firstMenu" data-name="firstMenu" @input="changeValue" placeholder="请输入内容" ></el-input>
+                            <el-input v-model="params.levelOneName" clearable data-name="firstMenu" @input="changeValue" placeholder="请输入内容" ></el-input>
                         </el-col>
                         <el-col :span="6" :offset="2">
                             二级菜单：
-                            <el-input v-model="params.secondMenu" data-name="secondMenu" @input="changeValue" placeholder="请输入内容" ></el-input>
+                            <el-input v-model="params.levelTwoName" clearable data-name="secondMenu" @input="changeValue" placeholder="请输入内容" ></el-input>
                         </el-col>
                     </el-row>
                     <el-row>
@@ -20,15 +20,15 @@
                             <el-select v-model="params.type" clearable
                                 name="type" @change="changeSelector($event)" placeholder="请选择考题类型">
                                 <el-option
-                                    v-for="(type, index) in typeList"
+                                    v-for="(item, index) in typeList"
                                     :key="index"
-                                    :label="type"
-                                    :value="type">
+                                    :label="item.value"
+                                    :value="item.type">
                                 </el-option>
                             </el-select>
                         </el-col>
                         <el-col :span="6" :offset="2">
-                            <el-button type="primary">查询</el-button>
+                            <el-button type="primary" @click="onSearch">查询</el-button>
                         </el-col>
                     </el-row>
                 </div>
@@ -37,18 +37,15 @@
                     :data="tableData"
                     v-loading="loading"
                     element-loading-text="拼命加载中"
-                    default-expand-all
-                    row-key="id"
-                    :tree-props="{children: 'childMenus'}"
                     border
                     stripe
                     style="width: 100%">
                     <el-table-column type="index" label="序号"></el-table-column>
-                    <el-table-column prop="name" label="一级菜单"></el-table-column>
-                    <el-table-column prop="cName" label="二级菜单"></el-table-column>
+                    <el-table-column prop="levelOneName" label="一级菜单"></el-table-column>
+                    <el-table-column prop="levelTwoName" label="二级菜单"></el-table-column>
                     <el-table-column label="考试类型">
                         <template class="template" v-slot="scope">
-                            {{typeList[scope.row.type]}}
+                            {{typeList[scope.row.type]['value']}}
                         </template>
                     </el-table-column>
                     <el-table-column label="操作">
@@ -80,11 +77,15 @@ export default {
         let router = useRouter();
         
         let params = reactive({
-            firstMenu: '',
-            secondMenu: '',
-            type: 1
+            levelOneName: '',
+            levelTwoName: '',
+            type: ''
         })
-        let typeList      = reactive(['高考', '模考']) 
+        let typeList      = reactive([
+            { type: 0, value: '模考'},
+            { type: 1, value: '高考'},
+            { type: 2, value: 'Top美考'}
+        ]) 
         let loading       = ref(true);
         let tableData     = ref([])
         let pageTotal     = ref(0)
@@ -100,24 +101,30 @@ export default {
         })
 
         let menuLists = (type) => {
-            getMenuList({type}).then(res => {
+            getMenuList({
+                current: 1,
+                size: 10,
+                levelOneName: '',
+                levelTwoName: '',
+                type: ''
+            }).then(res => {
                 loading.value = false
                 console.log('getMenuList', res)
-                let {pages, data, total} = res,
-                    _data           = []
-                data.forEach((item, index) => {
-                    let { childMenus, ...params } = item;
-                    let _children       = [];
-                    if(childMenus.length) {
-                        childMenus.forEach(itl => {
-                            let { name, ...value} = itl
-                            _children.push({ cName: name, ...value })
-                        })
-                    }
-                    _data.push({...params, childMenus: _children})
-                })
-                console.log('_data', _data)
-                tableData.value = _data
+                let {pages, records, total} = res.data;
+                    // _data                = []
+                // records.length && records.forEach((item, index) => {
+                //     let { childMenus, ...params } = item;
+                //     let _children       = [];
+                //     if(childMenus.length) {
+                //         childMenus.forEach(itl => {
+                //             let { name, ...value} = itl
+                //             _children.push({ cName: name, ...value })
+                //         })
+                //     }
+                //     _data.push({...params, childMenus: _children})
+                // })
+                // tableData.value = _data
+                tableData.value = records
                 pageTotal.value = pages
                 listTotal.value = total
             })
@@ -138,7 +145,7 @@ export default {
     methods: {
         changeCurrent(page){
             console.log('changeCurrent', page)
-            this.getSubjectData(page)
+            this.getMenusData(page)
         },
         changeValue(e) {
             console.log('changevalue', this.params) 
@@ -148,9 +155,18 @@ export default {
             this.params.type = e;
             console.log('changeSelector', this.params)
         },
-        getSubjectData(page, size) {
+        // 搜索
+        onSearch() {
+            console.log(this)
+            this.getMenusData(1)
+        },
+        getMenusData(page, size) {
             this.loading = true;
-            getSubjectList().then(res => {
+            getMenuList({
+                ...this.params,
+                current: page,
+                size: size || 10
+            }).then(res => {
                 this.loading = false
                 console.log('getSubjectList', res)
                 let {pages, records, total} = res.data

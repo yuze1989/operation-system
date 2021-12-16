@@ -122,11 +122,10 @@
                             <div class="item-img-box">
                                 <el-upload
                                     action="https://test-ykh.msjsol.com/sys/file/imageUpload"                                    
-                                    :headers="header" multiple :data="{index}"
+                                    :headers="header" multiple
                                     list-type="picture-card"
-                                    :on-success="handleSuccess"
-                                    :on-change="handleChange"
-                                    :on-remove="handleRemove">
+                                    :on-success="(response, file, fileList) => handleSuccess(response, file, fileList, index)"
+                                    :on-remove="(file, fileList) => handleRemove(file, fileList, index)">
                                     <i class="el-icon-plus"></i>
                                 </el-upload>
                                 <el-dialog v-model="dialogVisible">
@@ -154,7 +153,7 @@
                                             <span
                                                 v-if="!disabled"
                                                 class="el-upload-list__item-delete"
-                                                @click="handleRemove(file)"
+                                                @click="(file, fileList) => handleRemove(file, fileList, index)(file)"
                                             >
                                             <i class="el-icon-delete"></i>
                                             </span>
@@ -302,50 +301,44 @@ export default {
             let {index} = e.currentTarget.dataset;
             this.subjectData.splice(index, 1)
         },
-        // 
-        handlePicture(file) {
-            console.log('handlePicture', file)
-            this.dialogImageUrl = file.url;
-            this.dialogVisible = true;
-        },
         // 图片上传成功
-        handleSuccess(response, file, fileList, ...args) {
-            console.log('handleSuccess', response, file, fileList, args)
-            this.pictureList.push({
-                name: file.name,
-                uid: file.uid,
-                url: response.data
+        handleSuccess(response, file, fileList, index) {
+            console.log('handleSuccess', response, file, fileList, index)
+            this.subjectData[index]['imgs'].push({
+                // name: file.name,
+                // uid: file.uid,
+                // url: response.data,
+                description: file.name,
+                hdImg: response.data,
+                id: file.uid
             })
-            console.log('this.pictureList', this.pictureList)
+            console.log('this.pictureList', this.subjectData)
         },
         // 图片上传失败
         handleFail(err, file, fileList) {
             console.log('err, file, fileList', err, file, fileList)
         },
         // 删除图片
-        handleRemove(file, fileList) {
+        handleRemove(file, fileList, index) {
+            console.log('handleRemove', file, fileList, index)
             let { name, uid } = file,
-                { pictureList } = this,
-                _index;
-            pictureList.forEach((item, index) => {
-                if(item.uid === uid) {
-                    this.pictureList.splice(index, 1);
+                { subjectData } = this,
+                _data = subjectData[index]['imgs'];
+            _data.forEach((item, index, array) => {
+                if(item.id === uid) 
+                    array.splice(index, 1);
                     return 
-                }
             })
+            // pictureList.forEach((item, index) => {
+            //     if(item.uid === uid) {
+            //         this.pictureList.splice(index, 1);
+            //         return 
+            //     }
+            // })
+            console.log('object', this.subjectData)
         },
         handleLimit(file, fileList) {
             console.log('handleLimit', file, fileList)
-        },
-        handleChange(file, fileList){
-            console.log(file, fileList)
-        },
-        handleHttpRequest(response){
-            console.log(response)
-            let {file} = response
-            uploadImage({file}).then(res => {
-                console.log(res)
-            })
         },
         // 保存
         save(){
@@ -375,7 +368,6 @@ export default {
                 if(code === 200) {
                     this.$message({ type: 'success', message: '添加成功!' });
                     this.router.push('/examination/history/');
-
                 }
             })
         }
