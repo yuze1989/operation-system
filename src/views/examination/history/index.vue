@@ -5,7 +5,7 @@
                 <div class="title">历年考题信息</div>
                 <div class="history-condition">
                     <el-row>
-                        <el-col :span="6" :offset="4">
+                        <el-col :span="4" :offset="6">
                             考试类型：
                             <el-select v-model="params.type" clearable
                                 name="type" @change="changeSelector($event)" placeholder="请选择考题类型">
@@ -17,13 +17,13 @@
                                 </el-option>
                             </el-select>
                         </el-col>
-                        <el-col :span="6" :offset="2">
+                        <el-col :span="4" :offset="2">
                             机构名称：
                             <el-input v-model="params.name" data-name="secondMenu" @input="changeValue" placeholder="请输入内容" ></el-input>
                         </el-col>
                     </el-row>
                     <el-row>
-                        <el-col :span="6" :offset="4">
+                        <el-col :span="4" :offset="6">
                             考题年份：
                             <el-date-picker
                                 v-model="params.year"
@@ -32,16 +32,16 @@
                                 placeholder="选择考题年份">
                             </el-date-picker>
                         </el-col>
-                        <el-col :span="6" :offset="2">
+                        <el-col :span="4" :offset="2">
                             主办方归属：
                             <el-input v-model="params.firstMenuName" data-name="secondMenu" @input="changeValue" placeholder="请输入内容" ></el-input>
                         </el-col>
                     </el-row>
                     <el-row>
-                        <el-col :span="6" :offset="4">
+                        <el-col :span="4" :offset="6">
                             审核状态：
                             <el-select v-model="params.status" clearable
-                                name="type" @change="changeSelector($event)" placeholder="请选择考题类型">
+                                name="type" @change="changeSelector($event)" placeholder="请选择状态">
                                 <el-option
                                     v-for="(type, index) in statusData"
                                     :key="index"
@@ -50,7 +50,7 @@
                                 </el-option>
                             </el-select>
                         </el-col>
-                        <el-col :span="6" :offset="2">
+                        <el-col :span="4" :offset="2">
                             <el-button type="primary" @click="searchExam">查询</el-button>
                         </el-col>
                     </el-row>

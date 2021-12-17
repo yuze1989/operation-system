@@ -5,50 +5,37 @@
                 <div class="title">添加历年考题</div>
                 <div class="history-new-condition">
                     <el-row>
-                        <el-col :span="12">
+                        <el-col :span="2" :offset="5">
                             考试类型：
-                            <div class="">
-                                <el-select v-model="params.type" clearable
-                                    @change="changeSelector($event, 'type')" placeholder="请选择考题类型">
-                                    <el-option
-                                        v-for="item in typeList"
-                                        :key="item.type"
-                                        :label="item.value"
-                                        :value="item.type">
-                                    </el-option>
-                                </el-select>
-                            </div>
                         </el-col>
                         <el-col :span="12">
-                            考试年份：
-                            <div class="">
-                                <el-date-picker
-                                    v-model="params.year"
-                                    value-format="YYYY"
-                                    type="year">
-                                </el-date-picker>
-                            </div>
+                            <el-select v-model="params.type" clearable
+                                @change="changeSelector($event, 'type')" placeholder="请选择考题类型">
+                                <el-option
+                                    v-for="item in typeList"
+                                    :key="item.type"
+                                    :label="item.value"
+                                    :value="item.type">
+                                </el-option>
+                            </el-select>
                         </el-col>
-                    </el-row>
+                    </el-row>    
                     <el-row>
-                        <el-col :span="12">
+                        <el-col :span="2" :offset="5">
                             主办方：
-                            <div class="">
-                                <el-select v-model="params.parent" clearable
-                                    @change="changeSelector($event, 'parent')" placeholder="请选择考题类型">
-                                    <el-option
-                                        v-for="(item, index) in parentMenus"
-                                        :key="index"
-                                        :label="item.name"
-                                        :value="item.id">
-                                    </el-option>
-                                </el-select>
-                            </div>
                         </el-col>
                         <el-col :span="12">
-                            <div class="">
-                                <el-select v-model="params.children" clearable
-                                    @change="changeSelector($event, 'children')" placeholder="请选择考题类型">
+                            <el-select v-model="params.parent" clearable
+                                @change="changeSelector($event, 'parent')" placeholder="请选择在app上显示院校或主办方归属">
+                                <el-option
+                                    v-for="(item, index) in parentMenus"
+                                    :key="index"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
+                            <el-select v-model="params.children" clearable
+                                    @change="changeSelector($event, 'children')" placeholder="请选择在app上显示院校或主办方名称">
                                     <el-option
                                         v-for="(item, index) in childrenMenus"
                                         :key="index"
@@ -56,17 +43,35 @@
                                         :value="item.id">
                                     </el-option>
                                 </el-select>
-                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>    
+                        <el-col :span="2" :offset="5">
+                            考试年份：
+                        </el-col>
+                        <el-col :span="12">
+                            <el-date-picker
+                                v-model="params.year"
+                                value-format="YYYY"
+                                type="year"
+                                placeholder="请选择年份">
+                            </el-date-picker>
                         </el-col>
                     </el-row>
                     <el-row>
-                        <el-col :span="12">
+                        <el-col :span="2" :offset="5">
                             专业：
-                            <el-input type="text" v-model="params.specialty"></el-input>
                         </el-col>
                         <el-col :span="12">
+                            <el-input type="text" v-model="params.specialty" placeholder="请输入专业"></el-input>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="2" :offset="5">
                             考试名称：
-                            <el-input type="text" v-model="params.name"></el-input>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-input type="text" v-model="params.name" placeholder="请输入考试名称"></el-input>
                         </el-col>
                     </el-row>
                 </div>
@@ -75,50 +80,60 @@
                 </div>
                 <div class="history-new-condition history-subject" v-for="(item, index) in subjectData" :key="index">
                     <el-row>
-                        <el-col class="subject-item">
+                        <el-col class="subject-item" :span="3">
                             考试科目：
-                            <div class="">
-                                <el-select v-model="item.subjectId" clearable
-                                    @change="changeSelector($event)" placeholder="请选择考题类型">
-                                    <el-option
-                                        v-for="(item, index) in subjectSelectors"
-                                        :key="index"
-                                        :label="item.name"
-                                        :value="item.id">
-                                    </el-option>
-                                </el-select>
-                            </div>
                         </el-col>
-                        <el-col class="subject-item">
+                        <el-col :span="12">
+                            <el-select v-model="item.subjectId" clearable
+                                @change="changeSelector($event)" placeholder="请选择考题类型">
+                                <el-option
+                                    v-for="(item, index) in subjectSelectors"
+                                    :key="index"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col class="subject-item" :span="3">
                             考试题目：
-                            <div class="">
-                                <el-input placeholder="请输入考试题目" v-model="item.title"></el-input>
-                            </div>
                         </el-col>
-                        <el-col class="subject-item">
+                        <el-col :span="12">
+                            <el-input placeholder="请输入考试题目" v-model="item.title"></el-input>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col class="subject-item" :span="3">
                             考试时间：
-                            <div class="">
-                                <el-date-picker
-                                    v-model="item.examDate"
-                                    type="date"
-                                    value-format="YYYY-MM-DD"
-                                    placeholder="选择日期">
-                                </el-date-picker>
-                            </div>
+                            </el-col>
+                        <el-col :span="12">
+                            <el-date-picker
+                                v-model="item.examDate"
+                                type="date"
+                                value-format="YYYY-MM-DD"
+                                placeholder="选择日期">
+                            </el-date-picker>
                         </el-col>
-                        <el-col class="subject-item">
+                    </el-row>
+                    <el-row>
+                        <el-col class="subject-item" :span="3">
                             考试内容与简介：
-                            <div class="">
-                                <el-input
-                                    type="textarea"
-                                    autosize
-                                    placeholder="请输入内容"
-                                    v-model="item.content">
-                                </el-input>
-                            </div>
+                            </el-col>
+                        <el-col :span="12">
+                            <el-input
+                                type="textarea"
+                                :autosize="{ minRows: 4}"
+                                placeholder="请输入内容"
+                                v-model="item.content">
+                            </el-input>
                         </el-col>
-                        <el-col class="subject-item">
+                    </el-row>
+                    <el-row>
+                        <el-col class="subject-item" :span="3">
                             考试图片：
+                        </el-col>
+                        <el-col :span="20">
                             <div class="item-img-box">
                                 <el-upload
                                     action="https://test-ykh.msjsol.com/sys/file/imageUpload"                                    
@@ -133,16 +148,18 @@
                                 </el-dialog>
                             </div>
                         </el-col>
-                        <el-col class="subject-item">
+                    </el-row>
+                    <el-row>
+                        <el-col class="subject-item" :span="3">
                             备注：
-                            <div class="">
-                                <el-input
-                                    type="textarea"
-                                    autosize
-                                    placeholder="请输入内容"
-                                    v-model="item.remarks">
-                                </el-input>
-                            </div>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-input
+                                type="textarea"
+                                placeholder="请输入内容"
+                                :autosize="{ minRows: 4}"
+                                v-model="item.remarks">
+                            </el-input>
                         </el-col>
                     </el-row>
                     <el-button type="danger" class="delete-button" size="mini" v-if="index !== 0" :data-index="index" @click="deleteSubject">删除</el-button>
@@ -380,8 +397,12 @@ export default {
     /* justify-content: space-between; */
     align-items: center;
 }
+.history-new-condition .el-col .el-input,
+.history-new-condition .el-col .el-select,
+.history-new-condition .el-col .el-date-picker,
+.history-new-condition .el-col .el-date-editor,
 .history-new-condition .el-col .el-input{
-    width: 200px !important;
+    flex: 1;
 }
 .history-new-condition .el-col .el-date-editor.el-input{
     width: 200px;

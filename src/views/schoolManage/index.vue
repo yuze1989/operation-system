@@ -1,15 +1,15 @@
 <template>
     <div class="school-container">
         <el-row :gutter="20">
-            <el-col :span="18" :offset="3">
+            <el-col :span="20" :offset="2">
                 <div class="title">高校信息</div>
                 <div class="school-condition">
                     <el-row>
-                        <el-col :span="6" :offset="4">
+                        <el-col :span="4" :offset="6">
                             高校名称：
                             <el-input v-model="params.name" @input="changeValue" clearable placeholder="请输入内容" ></el-input>
                         </el-col>
-                        <el-col :span="6" :offset="2">
+                        <el-col :span="4" :offset="1">
                             高校分类：
                             <el-select v-model="params.classifyId" clearable
                                 @change="changeSelector($event, 'type')" placeholder="请选择">
@@ -22,8 +22,8 @@
                             </el-select>
                         </el-col>
                     </el-row>
-                    <el-row>
-                        <el-col :span="10" :offset="4">
+                    <el-row :gutter="0">
+                        <el-col :span="7" :offset="6">
                             高校地址：
                             <el-select v-model="params.province" clearable
                                 @change="changeSelector($event, 'province')" placeholder="请选择">
