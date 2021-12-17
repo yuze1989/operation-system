@@ -41,6 +41,7 @@
                         <el-col :span="5" :offset="7">
                             试卷价格：
                             <el-input class="price-input" type="text" v-model="params.priceMin" placeholder="金额"></el-input>
+                            至
                             <el-input class="price-input" v-model="params.priceMax" @input="changeValue" placeholder="金额" ></el-input>
                         </el-col>
                         <el-col :span="5">
@@ -53,7 +54,7 @@
                     </el-row>
                 </div>
                 <div>
-                    <el-button type="primary" @click="createHighPaper">新增高分试卷</el-button>
+                    <!-- <el-button type="primary" @click="createHighPaper">新增高分试卷</el-button> -->
                 </div>
                 <el-table
                     :data="tableData"
@@ -61,6 +62,7 @@
                     element-loading-text="拼命加载中"
                     border
                     stripe
+                    @selection-change="handleSelectionChange"
                     style="width: 100%">
                     <!-- 
                         auditStatus	integer($int32) 审核状态 0-未审核 1-通过 2-不通过
@@ -145,6 +147,7 @@ export default {
             title: '',
             year: ''
         })
+
         let examType = ref(['模考', '高考', 'top美考']) // 考试类型 0-模考 1-高考 2-top美考 
         let auditStatus = ref(['未审核', '通过', '不通过']) // auditStatus	integer($int32) 审核状态 0-未审核 1-通过 2-不通过
         let subjectList   = ref([])
@@ -152,7 +155,8 @@ export default {
         let tableData     = ref([])
         let pageTotal     = ref(0)
         let listTotal     = ref(0)
-        
+        let multipleSelection = ref([])
+
         let createHighPaper = (e) => {
             router.push('/examination/highScorePaper/new')
         }
@@ -182,7 +186,8 @@ export default {
             params,
             subjectList,
             examType,
-            auditStatus
+            auditStatus,
+            multipleSelection
         };
     },
     methods: {
@@ -239,6 +244,12 @@ export default {
         auditHandle(scope) {
             let {$index, row} = scope
             this.router.push(`/examination/highScorePaper/examine?id=${row.id}`)
+        },
+        // 批量操作
+        handleSelectionChange(value) {
+            console.log(value)
+            this.multipleSelection = value
+            console.log(this.multipleSelection)
         }
     }
 };

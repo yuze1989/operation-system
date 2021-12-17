@@ -8,12 +8,12 @@
                         <el-col :span="10" :offset="8">
                             考试科目：
                             <el-select v-model="examId" clearable
-                                @change="changeSelector($event, 'exam')" placeholder="请选择考试科目">
+                                @change="changeSelector($event, 'subject')" placeholder="请选择考试科目">
                                 <el-option
                                     v-for="(item, index) in subjectList"
                                     :key="index"
-                                    :label="item.name"
-                                    :value="item.id">
+                                    :label="item.subjectName"
+                                    :value="item.subjectId">
                                 </el-option>
                             </el-select>
                         </el-col>
@@ -24,9 +24,9 @@
                             <el-select v-model="params.questionId" clearable
                                 name="type" @change="changeSelector($event)" placeholder="请选择考题类型">
                                 <el-option
-                                    v-for="(item, index) in subjectList"
+                                    v-for="(item, index) in problems"
                                     :key="index"
-                                    :label="item.name"
+                                    :label="item.content"
                                     :value="item.id">
                                 </el-option>
                             </el-select>
@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { reactive, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import {createPaper, getSubjectSelectors, questionList} from '@/api/exam'
 export default {
@@ -93,12 +93,20 @@ export default {
         })
         let examId = ref('')
         let subjectList = ref([])
-        // 考试科目
-        getSubjectSelectors().then(res => {
-            console.log(res)
-            let {code, msg} = res
-            if(code === 200) subjectList.value = res.data
+        let problems = ref([])
+        onMounted(() => {
+            let query = router.currentRoute.value.query
+            questions(query.id)
         })
+        let questions = (id) => {
+            questionList(id).then(res => {
+                console.log(res)
+                let {code, data, msg} = res
+                if(code === 200) {
+                    subjectList.value = data.subjects
+                }
+            })
+        }
 
         return {
             name,
@@ -107,6 +115,7 @@ export default {
             params,
             examId,
             subjectList,
+            problems,
             limitPictureNumber
         };
     },
@@ -115,9 +124,14 @@ export default {
             console.log('changevalue', this.params) 
         },
         changeSelector(e, name) {
+            let subject = this.subjectList
             console.log(e)
             console.log('changeSelector', this.params)
-            if(name === 'exam') this.getQuestionList();
+            if(name === 'subject'){
+                subject.forEach((item, index) => {
+                    if(item.subjectId = e) this.problems = item.questions
+                })
+            };
         },
         // questionId
         getQuestionList() {

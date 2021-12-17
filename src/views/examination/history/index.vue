@@ -224,8 +224,9 @@ export default {
             this.router.push(`/examination/history/detail?id=${row.id}`)
         },
         // 去新增高分试卷
-        createPaper() {
-            this.router.push('/examination/highScorePaper/new')
+        createPaper(scope) {
+            let {$index, row} = scope
+            this.router.push(`/examination/highScorePaper/new?id=${row.id}`)
         }
     }
 };
