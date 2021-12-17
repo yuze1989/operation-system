@@ -26,7 +26,7 @@
                         <el-col :span="7" :offset="6">
                             高校地址：
                             <el-select v-model="params.province" clearable
-                                @change="changeSelector($event, 'province')" placeholder="请选择">
+                                @change="changeSelector($event, 'province')" placeholder="请选择省">
                                 <el-option
                                     v-for="(item, index) in provinceList"
                                     :key="index"
@@ -35,7 +35,7 @@
                                 </el-option>
                             </el-select>
                             <el-select v-model="params.city" clearable
-                                @change="changeSelector($event)" placeholder="请选择">
+                                @change="changeSelector($event)" placeholder="请选择市区">
                                 <el-option
                                     v-for="(item, index) in cityList"
                                     :key="index"

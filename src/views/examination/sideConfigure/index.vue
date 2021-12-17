@@ -1,21 +1,21 @@
 <template>
     <div class="side-container">
         <el-row :gutter="20">
-            <el-col :span="18">
+            <el-col :span="18" :offset="3">
                 <div class="title">历年考题菜单配置</div>
                 <div class="side-condition">
                     <el-row>
-                        <el-col :span="6" :offset="4">
+                        <el-col :span="5" :offset="4">
                             一级菜单：
                             <el-input v-model="params.levelOneName" clearable data-name="firstMenu" @input="changeValue" placeholder="请输入内容" ></el-input>
                         </el-col>
-                        <el-col :span="6" :offset="2">
+                        <el-col :span="5" :offset="2">
                             二级菜单：
                             <el-input v-model="params.levelTwoName" clearable data-name="secondMenu" @input="changeValue" placeholder="请输入内容" ></el-input>
                         </el-col>
                     </el-row>
                     <el-row>
-                        <el-col :span="6" :offset="4">
+                        <el-col :span="5" :offset="4">
                             操作类型：
                             <el-select v-model="params.type" clearable
                                 name="type" @change="changeSelector($event)" placeholder="请选择考题类型">
@@ -242,8 +242,9 @@ export default {
     justify-content: space-between;
     align-items: center;
 }
-.side-condition .el-col .el-input{
-    width: 200px !important;
+.side-condition .el-col .el-input,
+.side-condition .el-col .el-select{
+    width: 200px;
 }
 .side-condition .el-col .el-date-editor.el-input{
     width: 200px;
