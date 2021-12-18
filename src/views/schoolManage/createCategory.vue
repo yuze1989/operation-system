@@ -2,105 +2,14 @@
     <div class="school-container">
         <el-row :gutter="20">
             <el-col :span="12" :offset="6">
-                <div class="title">添加高校信息</div>
+                <div class="title">新增高校分类</div>
                 <div class="school-condition">
-                    <el-row>
-                        <el-col :span="4" :offset="4">
-                            高校名称：
-                        </el-col>
-                        <el-col :span="10">
-                            <el-input v-model="params.name" @input="changeValue" placeholder="请输入高校名称" ></el-input>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="4" :offset="4">
-                            高校网站地址：
-                        </el-col>
-                        <el-col :span="10">
-                            <el-input v-model="params.description" @input="changeValue" placeholder="请输入高校网址" ></el-input>
-                        </el-col>
-                    </el-row>
                     <el-row>
                         <el-col :span="4" :offset="4">
                             高校分类：
                         </el-col>
                         <el-col :span="10">
-                            <el-select v-model="params.classifyId" clearable
-                                name="type" @change="changeSelector($event, 'classifyId')" placeholder="请选择">
-                                <el-option
-                                    v-for="(item, index) in schoolType"
-                                    :key="index"
-                                    :label="item.name"
-                                    :value="item.id">
-                                </el-option>
-                            </el-select>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="4" :offset="4">
-                            高校地址：
-                        </el-col>
-                        <el-col :span="10">
-                            <el-select v-model="params.provinceId" clearable
-                                name="type" @change="changeSelector($event, 'provinceId')" placeholder="请选择省">
-                                <el-option
-                                    v-for="(item, index) in provinceList"
-                                    :key="index"
-                                    :label="item.name"
-                                    :value="item.id">
-                                </el-option>
-                            </el-select>
-                            <el-select v-model="params.cityId" clearable
-                                name="type" @change="changeSelector($event)" placeholder="请选择市">
-                                <el-option
-                                    v-for="(item, index) in cityList"
-                                    :key="index"
-                                    :label="item.name"
-                                    :value="item.id">
-                                </el-option>
-                            </el-select>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="4" :offset="4">
-                            高校详细地址：
-                        </el-col>
-                        <el-col :span="10">
-                            <el-input v-model="params.address" @input="changeValue" placeholder="请输入内容" ></el-input>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="4" :offset="4">
-                            高校简介：
-                        </el-col>
-                        <el-col :span="10">
-                            <el-input type="textarea" v-model="params.detail" @input="changeValue" :autosize="{ minRows: 4}" placeholder="请输入内容" ></el-input>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="6" :offset="4">
-                            高校LOGO：
-                        </el-col>
-                        <el-col :span="10">
-                            <div>
-                                    <!-- :disabled="uploadIsDisabled" -->
-                                <el-upload :class="{'upload-display': uploadIsDisabled}" class="disUoloadSty"
-                                    action="https://test-ykh.msjsol.com/sys/file/imageUpload"
-                                    list-type="picture-card"
-                                    :headers="header" :limit="limitPictureNumber"
-                                    :on-success="handleSuccess"
-                                    :on-remove="handleRemove">
-                                    <i class="el-icon-plus"></i>
-                                </el-upload>
-                            </div>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="4" :offset="4">
-                            app展示位置：
-                        </el-col>
-                        <el-col :span="10">
-                            <el-input v-model="params.ranking" @input="changeValue" placeholder="请输入内容" ></el-input>
+                            <el-input v-model="params.name" placeholder="请输入高校分类名称" ></el-input>
                         </el-col>
                     </el-row>
                     <el-row type="flex" justify="center">
@@ -115,96 +24,35 @@
 </template>
 
 <script>
-import { reactive, ref, toRefs } from "vue";
+import { onActivated, onDeactivated, reactive, ref, toRefs } from "vue";
 import { useRouter } from 'vue-router';
-import { getProvince, getCity, getSchoolType, createSchool } from '../../api/school.js'
+import { createSchoolCategory } from '../../api/school.js'
 export default {
-    name: "logs",
+    name: "newSchoolCategory",
     setup() {
         let name   = localStorage.getItem("ms_username");
-        let token   = localStorage.getItem("token");
         let router = useRouter()
-        let header = ref({
-            SYS_TOKEN: token
-        })
         const params = reactive({
-                address: '',
-                classifyId: '',
-                description: '',
-                detail: '',
-                id: 0,
-                logo: '',
                 name: '',
-                provinceId: '',
-                cityId: '',
-                ranking: 0
+                priority: 1
             });
-        const loading       = ref(true);
-        const limitPictureNumber = ref(1);
-        const schoolType    = ref([])
-        const provinceList  = ref([])
-        const cityList      = ref([])
-        const uploadIsDisabled = ref(false)
-        const fileList = ref(false)
-
-        getSchoolType().then(res => {
-            console.log('getSchoolType', res)
-            let {code, data, msg} = res;
-            schoolType.value = data
-        })
-        getProvince().then(res => {
-            console.log('getProvince', res)
-            let {code, data, msg} = res;
-            provinceList.value = data
+        onDeactivated(() => {
+            params.name = ''
+            params.priority = ''
         })
         return {
             name,
-            header,
             router,
-            params,
-            limitPictureNumber,
-            schoolType,
-            provinceList,
-            cityList,
-            loading,
-            uploadIsDisabled
+            params
         };
     },
     methods: {
-        changeValue() {
-            console.log('changeValue', this.params)
-        },
-        changeSelector(e, name){
-            console.log('changeSelector', e, this.params)
-            if(name === 'provinceId') this.getCityList()
-        },
-        // 上传logo
-        handleSuccess(response, file, fileList){
-            console.log(response, file, fileList)
-            this.params.logo = response.data
-            this.uploadIsDisabled = true
-        },
-        handleRemove(file){
-            this.uploadIsDisabled = false
-        },
-        // 市区列表
-        getCityList() {
-            getCity(this.params.provinceId).then(res => {
-                console.log('getCityList', res)
-                let {code, data, msg} = res;
-                this.cityList = data
-                this.params.cityId = ''
-                console.log(this.params)
-            })
-        },
         saveHandle() {
-            console.log(this.params)
-            createSchool(this.params).then(res => {
-                console.log(res)
-                let {code, msg} = res
-                if(code === 200) {
-                    this.$message({type: 'success', message: '添加成功'})
-                    this.router.push('/schoolManage')
+            createSchoolCategory(this.params).then(res => {
+                let {code} = res
+                if(code === 200){
+                    this.$message({type: 'success', message: '保存成功'});
+                    this.router.push('/schoolManage/category')
                 }
             })
         }

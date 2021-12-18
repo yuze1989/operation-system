@@ -1,55 +1,20 @@
 <template>
     <div class="category-container">
         <el-row :gutter="20">
-            <el-col :span="20" :offset="2">
+            <el-col :span="16" :offset="2">
                 <div class="title">高校菜单配置</div>
                 <div class="category-condition">
-                    <el-row>
-                        <el-col :span="6" :offset="6">
-                            高校名称：
-                            <el-input v-model="params.name" @input="changeValue" clearable placeholder="请输入内容" ></el-input>
-                        </el-col>
-                        <el-col :span="6" :offset="1">
-                            高校分类：
-                            <el-select v-model="params.classifyId" clearable
-                                @change="changeSelector($event, 'type')" placeholder="请选择">
-                                <el-option
-                                    v-for="(item, index) in schoolType"
-                                    :key="index"
-                                    :label="item.name"
-                                    :value="item.id">
-                                </el-option>
-                            </el-select>
-                        </el-col>
-                    </el-row>
                     <el-row :gutter="0">
-                        <el-col :span="10" :offset="6">
-                            高校地址：
-                            <el-select v-model="params.province" clearable
-                                @change="changeSelector($event, 'province')" placeholder="请选择省">
-                                <el-option
-                                    v-for="(item, index) in provinceList"
-                                    :key="index"
-                                    :label="item.name"
-                                    :value="item.id">
-                                </el-option>
-                            </el-select>
-                            <el-select v-model="params.city" clearable
-                                @change="changeSelector($event)" placeholder="请选择市区">
-                                <el-option
-                                    v-for="(item, index) in cityList"
-                                    :key="index"
-                                    :label="item.name"
-                                    :value="item.id">
-                                </el-option>
-                            </el-select>
+                        <el-col :span="8" :offset="6">
+                            高校分类：
+                            <el-input type="text" v-model="params.name" placeholder="请输入高校分类"></el-input>
                         </el-col>
                         <el-col :span="4" :offset="1">
                             <el-button type="primary" @click="search">查询</el-button>
                         </el-col>
                     </el-row>
                 </div>
-                <el-button type="primary" @click="createSchool">新增高校</el-button>
+                <el-button type="primary" @click="createSchoolCategory">新增高校分类</el-button>
                 <el-table
                     :data="tableData"
                     v-loading="loading"
@@ -57,15 +22,11 @@
                     border
                     stripe
                     style="width: 100%">
-                    <el-table-column prop="id" label="高校编号"></el-table-column>
-                    <el-table-column prop="name" label="高校名称"></el-table-column>
-                    <el-table-column prop="classify" label="高校分类"></el-table-column>
-                    <el-table-column prop="address" label="所属省份"></el-table-column>
-                    <el-table-column prop="ip" label="所属地市"></el-table-column>
-                    <el-table-column prop="ranking" label="app展示排序位置"></el-table-column>
+                    <el-table-column type="index" label="序号" width="200"></el-table-column>
+                    <el-table-column prop="name" label="高校分类"></el-table-column>
                     <el-table-column label="操作">
                         <template v-slot="scope">
-                            <el-button type="text" size="mini" >修改</el-button >
+                            <el-button type="text" size="mini" @click="modifyHandle(scope)">修改</el-button >
                             <el-button type="text" size="mini" @click="deleteHandle(scope)">删除</el-button >
                         </template>
                     </el-table-column>
@@ -83,8 +44,8 @@
 </template>
 
 <script>
-import { reactive, ref } from "vue";
-import {getProvince, getCity, getSchoolType, schoolList, deleteSchool } from '../../api/school.js'
+import { onMounted, reactive, ref } from "vue";
+import { schoolCategory, deleteSchoolCategory, modifySchoolCategory } from '../../api/school.js'
 import { useRouter } from 'vue-router';
 export default {
     name: "logs",
@@ -92,107 +53,104 @@ export default {
         const name   = localStorage.getItem("ms_username");
         const router = useRouter();
         const params = reactive({
-                province: '',
-                city: '',
-                classifyId: '',
+                current: 1,
+                size: 10,
                 name: ''
             });
+        
         const loading       = ref(true);
-        const provinceList    = ref([])
-        const cityList    = ref([])
-        const schoolType      = ref([])
+        const categoryList     = ref([])
+
         const tableData     = ref([])
         const pageTotal     = ref(0)
         const listTotal     = ref(0)
-        getProvince().then(res => {
-            console.log('provinceList', res)
-            let {code, data, msg} = res;
-            provinceList.value = data
+
+        onMounted(() => {
+            console.log('object')
+            schoolCategoryList()
         })
-        // 高校分类
-        getSchoolType().then(res => {
-            console.log('getSchoolType', res)
-            let {code, data, msg} = res;
-            schoolType.value = data;
-        })
-        // 高校列表
-        schoolList({
-            ...params
-        }).then(res => {
-            loading.value = false
-            console.log('getLogs', res)
-            let {pages, records, total} = res.data
-            tableData.value = records
-            pageTotal.value = pages
-            listTotal.value = total
-        })
+        const schoolCategoryList = (page) => {
+            schoolCategory({
+                current: page || params.current,
+                size: 10,
+                name: params.name
+            }).then(res => {
+                loading.value = false
+                console.log('getLogs', res)
+                let {pages, records, total} = res.data
+                tableData.value = records
+                pageTotal.value = pages
+                listTotal.value = total
+            })
+        }
+
         // 跳转新增高校
-        let createSchool = () => {
-            router.push('/schoolManage/new')
+        let createSchoolCategory = () => {
+            router.push('/schoolManage/createCategory')
         }
         return {
             name,
+            router,
             params,
-            provinceList,
-            cityList,
-            schoolType,
-            tableData,
             loading,
-            createSchool,
+            tableData,
             pageTotal,
-            listTotal
+            listTotal,
+            categoryList,
+            createSchoolCategory,
+            schoolCategoryList
         };
     },
     methods: {
         changeValue() {
             console.log('changeValue', this.params)
-            // this.getSchoolList()
         },
         search(){
-            this.getSchoolList();
+            this.schoolCategoryList(1);
         },
         changeSelector(e, name){
             console.log('changeSelector', e, name)
             if(name === 'province') this.getCityList()
         },
         changeCurrent(page){
+            this.params.current = page
             console.log('changeCurrent', page)
-            this.getSchoolList(page)
+            this.schoolCategoryList(page)
         },
-        getSchoolList(page, size) {
-            this.loading = true;
-            schoolList({
-                ...this.params,
-                current: page || 1,
-                size: size || 10
-            }).then(res => {
-                this.loading = false
-                console.log('getSchoolList', res)
-                let {pages, records, total} = res.data
-                this.tableData = records
-                this.pageTotal = pages
-                this.listTotal = total
-            })
+        // 修改
+        modifyHandle(scope) {
+            let {$index, row} = scope
+            this.$prompt('请输入邮箱', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消'
+                }).then(({ value }) => {
+                    modifySchoolCategory({
+                        id: row.id,
+                        name: value,
+                        priority: row.priority
+                    }).then(res => {
+                        let {code} = res
+                        if(code === 200) {
+                            this.$message({ type: 'success', message: '修改成功' });
+                            this.schoolCategoryList()
+                        }
+                    })
+                }).catch(() => {
+                this.$message({ type: 'info', message: '取消输入' });       
+            });
         },
-        // 市区列表
-        getCityList() {
-            getCity(this.params.province).then(res => {
-                console.log('getCityList', res)
-                let {code, data, msg} = res;
-                this.cityList = data
-            })
-        },
+        
         // 删除
         deleteHandle(scope) {
             let {$index, row} = scope
             console.log($index, row)
-            this.$confirm('确定要删除该高校?', '提示', {
+            this.$confirm('确定要删除该高校分类?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning',
                 center: true
             }).then(() => {
-                deleteSchool(row.id).then(res => {
+                deleteSchoolCategory(row.id).then(res => {
                     if(res?.code === 200) {
                         this.$message({ type: 'success', message: '删除成功!' });
                         this.tableData.splice($index, 1);

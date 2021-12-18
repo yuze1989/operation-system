@@ -64,3 +64,42 @@ export const deleteSchool = id => {
         isLogin: true
     })
 }
+
+// 高校分类
+export const schoolCategory = query => {
+    return request({
+        url: '/sys/dict/list',
+        method: 'post',
+        data: query,
+        isLogin: true
+    })
+}
+
+// 删除高校分类
+export const deleteSchoolCategory = id => {
+    return request({
+        url: `/sys/dict/${id}`,
+        method: 'post',
+        isLogin: true
+    })
+}
+
+// 修改高校分类
+export const modifySchoolCategory = query => {
+    return request({
+        url: `/sys/dict/modify`,
+        method: 'post',
+        data: query,
+        isLogin: true
+    })
+}
+
+// 新增高校分类
+export const createSchoolCategory = query => {
+    return request({
+        url: '/sys/dict/add',
+        method: 'post',
+        data: query,
+        isLogin: true
+    })
+}

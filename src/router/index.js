@@ -255,7 +255,7 @@ const routes = [
                 component: () => import ( /* webpackChunkName: "logs" */ "../views/schoolManage/category.vue")
             },
             {
-                path: "/schoolManage/category",
+                path: "/schoolManage/createCategory",
                 name: "newSchoolCategory",
                 meta: {
                     title: '新增高校分类'
