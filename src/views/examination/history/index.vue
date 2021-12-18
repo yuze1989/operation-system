@@ -5,7 +5,7 @@
                 <div class="title">历年考题信息</div>
                 <div class="history-condition">
                     <el-row>
-                        <el-col :span="4" :offset="6">
+                        <el-col :span="5" :offset="6">
                             考试类型：
                             <el-select v-model="params.type" clearable
                                 name="type" @change="changeSelector($event)" placeholder="请选择考题类型">
@@ -17,13 +17,13 @@
                                 </el-option>
                             </el-select>
                         </el-col>
-                        <el-col :span="4" :offset="2">
+                        <el-col :span="5" :offset="2">
                             机构名称：
                             <el-input v-model="params.name" data-name="secondMenu" @input="changeValue" placeholder="请输入内容" ></el-input>
                         </el-col>
                     </el-row>
                     <el-row>
-                        <el-col :span="4" :offset="6">
+                        <el-col :span="5" :offset="6">
                             考题年份：
                             <el-date-picker
                                 v-model="params.year"
@@ -32,13 +32,13 @@
                                 placeholder="选择考题年份">
                             </el-date-picker>
                         </el-col>
-                        <el-col :span="4" :offset="2">
+                        <el-col :span="5" :offset="2">
                             主办方归属：
                             <el-input v-model="params.firstMenuName" data-name="secondMenu" @input="changeValue" placeholder="请输入内容" ></el-input>
                         </el-col>
                     </el-row>
                     <el-row>
-                        <el-col :span="4" :offset="6">
+                        <el-col :span="5" :offset="6">
                             审核状态：
                             <el-select v-model="params.status" clearable
                                 name="type" @change="changeSelector($event)" placeholder="请选择状态">
@@ -50,13 +50,13 @@
                                 </el-option>
                             </el-select>
                         </el-col>
-                        <el-col :span="4" :offset="2">
+                        <el-col :span="5" :offset="2">
                             <el-button type="primary" @click="searchExam">查询</el-button>
                         </el-col>
                     </el-row>
                 </div>
                 <el-row :gutter="20">
-                    <!-- <el-col :span="3"><el-button type="primary" @click="batchAuditStatus">批量审核</el-button></el-col> -->
+                    <el-col :span="3"><el-button type="primary" @click="batchAuditStatus">批量审核</el-button></el-col>
                     <el-col :span="3"><el-button type="primary" @click="createHistory">新增历年考题</el-button></el-col>
                 </el-row>
                 <el-table
@@ -65,6 +65,7 @@
                     element-loading-text="拼命加载中"
                     border
                     stripe
+                    @selection-change="handleSelectionChange"
                     style="width: 100%">
                     <el-table-column type="selection" width="55" align="center"></el-table-column>
                     <el-table-column type="index" width="50" label="序号" align="center"></el-table-column>
@@ -87,7 +88,7 @@
                     </el-table-column>
                     <el-table-column label="操作">
                         <template class="template" v-slot="scope">
-                            <!-- <el-button type="text" size="mini" @click="editExam(scope)">修改</el-button> -->
+                            <el-button type="text" size="mini" @click="editExam(scope)">修改</el-button>
                             <el-button type="text" size="mini" @click="deleteExam(scope)">删除</el-button>
                             <el-button type="text" size="mini" @click="reviewExam(scope)">审核</el-button>
                             <el-button type="text" size="mini" @click="createPaper(scope)">新增高分试卷</el-button>
@@ -128,7 +129,7 @@ export default {
         let tableData     = ref([])
         let pageTotal     = ref(0)
         let listTotal     = ref(0)
-        
+        let multipleSelection  = ref([]) // 保存批量选择的数据
         let createHistory = (e) => {
             router.push('/examination/history/new')
         }
@@ -154,7 +155,8 @@ export default {
             createHistory,
             params,
             examType,
-            statusData
+            statusData,
+            multipleSelection
         };
     },
     methods: {
@@ -174,6 +176,20 @@ export default {
             console.log(e)
             // this.params.type = e;
             // console.log('changeSelector', this.params)
+        },
+        handleSelectionChange(value) {
+            console.log(value)
+            this.multipleSelection = value
+        },
+        // 去批量审核
+        batchAuditStatus() {
+            console.log('this.multipleSelection', this.multipleSelection)
+            let query = []
+            this.multipleSelection.forEach(item => {
+                query.push(item.id)
+            })
+            console.log(query, query.join(','))
+            query.length && this.$router.push({path: '/examination/history/examine', query: { id: query.join(',') }})
         },
         getExamData(page) {
             this.loading = true;

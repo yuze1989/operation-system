@@ -165,6 +165,10 @@ export default {
                 index: "/schoolManage",
                 title: "高校管理",
               },
+              {
+                index: "/schoolManage/category",
+                title: "高校分类",
+              }
             ],
           },
           {

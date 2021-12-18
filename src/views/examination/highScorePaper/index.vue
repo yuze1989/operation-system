@@ -54,7 +54,9 @@
                     </el-row>
                 </div>
                 <div>
-                    <!-- <el-button type="primary" @click="createHighPaper">新增高分试卷</el-button> -->
+                    <el-button type="primary" @click="batchAuditStatus">批量审核</el-button>
+                    <el-button type="primary" @click="batchAuditPrice">批量修改价格</el-button>
+                    <el-button type="primary" @click="bathAuditCopyright">批量修改版权信息</el-button>
                 </div>
                 <el-table
                     :data="tableData"
@@ -91,7 +93,9 @@
                     </el-table-column>
                     <el-table-column prop="firstMenuName" label="主办方归属"></el-table-column>
                     <el-table-column prop="secondMenuName" label="主办方归属"></el-table-column>
+                    <el-table-column prop="title" label="考题科目"></el-table-column>
                     <el-table-column prop="subjectName" label="考题科目"></el-table-column>
+                    <el-table-column prop="price" label="试卷价格"></el-table-column>
                     <el-table-column prop="hdImg" label="试卷图片">
                         <template v-slot="scope">
                             <el-image style="width: 100px; height: 100px" :src="scope.row.hdImg" fit="fill"></el-image>
@@ -107,9 +111,9 @@
                     </el-table-column>
                     <el-table-column label="操作">
                         <template class="template" v-slot="scope">
-                            <!-- <el-button type="text" size="mini" @click="deleteSubject(scope)">修改</el-button> -->
+                            <el-button type="text" size="mini" @click="editHandle(scope)">修改</el-button>
                             <el-button type="text" size="mini" @click="deletePaperHandle(scope)">删除</el-button>
-                            <el-button type="text" size="mini" v-if="scope.row.auditStatus == 0" @click="auditHandle(scope)">审核</el-button>
+                            <el-button type="text" size="mini" @click="auditHandle(scope)">审核</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -126,9 +130,9 @@
 </template>
 
 <script>
-import { reactive, ref } from "vue";
+import { onActivated, onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-import { paperList, getSubjectSelectors, deletePaper} from '@/api/exam'
+import { paperList, getSubjectSelectors, deletePaper, updateAuditPricePaper, updateAuditCopyrightPaper} from '@/api/exam'
 export default {
     name: "highScorePaper",
     setup() {
@@ -157,8 +161,8 @@ export default {
         let listTotal     = ref(0)
         let multipleSelection = ref([])
 
-        let createHighPaper = (e) => {
-            router.push('/examination/highScorePaper/new')
+        let createHighPaper = (pid) => {
+            router.push({path: '/examination/highScorePaper/new', query: {pid}})
         }
         // 考试科目
         getSubjectSelectors().then(res => {
@@ -166,15 +170,19 @@ export default {
             let {code, msg} = res
             if(code === 200) subjectList.value = res.data
         })
-        paperList(params).then(res => {
-            loading.value = false
-            console.log('getSubjectList', res)
-            let {pages, records, total} = res.data
-            tableData.value = records
-            pageTotal.value = pages
-            listTotal.value = total
+        onActivated(() => {
+            getPaperList()
         })
-
+        let getPaperList = () => {
+            paperList(params).then(res => {
+                loading.value = false
+                console.log('getSubjectList', res)
+                let {pages, records, total} = res.data
+                tableData.value = records
+                pageTotal.value = pages
+                listTotal.value = total
+            })
+        }
         return {
             name,
             router,
@@ -187,7 +195,8 @@ export default {
             subjectList,
             examType,
             auditStatus,
-            multipleSelection
+            multipleSelection,
+            getPaperList
         };
     },
     methods: {
@@ -245,11 +254,75 @@ export default {
             let {$index, row} = scope
             this.router.push(`/examination/highScorePaper/examine?id=${row.id}`)
         },
+        // 去批量审核
+        batchAuditStatus() {
+            console.log('this.multipleSelection', this.multipleSelection)
+            let query = []
+            this.multipleSelection.forEach(item => {
+                query.push(item.id)
+            })
+            console.log(query, query.join(','))
+            query.length && this.$router.push({path: '/examination/highScorePaper/examine', query: { id: query.join(',') }})
+        },
         // 批量操作
         handleSelectionChange(value) {
             console.log(value)
             this.multipleSelection = value
-            console.log(this.multipleSelection)
+        },
+        // 批量修改价格
+        batchAuditPrice() {
+            console.log('this.multipleSelection', this.multipleSelection)
+            let query = []
+            this.multipleSelection.forEach(item => {
+                query.push(Number(item.id))
+            })
+            query.length && this.$prompt('请输入最新的价格', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                inputPattern: /(^[1-9]{1}[0-9]*$)|(^[0-9]*\.[0-9]{1,2}$)/,
+                inputErrorMessage: '金额格式不正确'
+                }).then(({ value }) => {
+                    updateAuditPricePaper({
+                        id: query, 
+                        price: value
+                    }).then(res => {
+                        if( res.code === 200) {
+                            this.$message({ type: 'success', message: '价格修改成功'});
+                            this.getPaperList()
+                        }
+                    })
+                }).catch(() => {
+                this.$message({ type: 'info', message: '取消修改' });       
+            });
+        },
+        // 批量修改版权信息
+        bathAuditCopyright() {
+            console.log('this.multipleSelection', this.multipleSelection)
+            let query = []
+            this.multipleSelection.forEach(item => {
+                query.push(Number(item.id))
+            })
+            query.length && this.$prompt('请输入最新的版权信息', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                }).then(({ value }) => {
+                    updateAuditCopyrightPaper({
+                        id: query, 
+                        price: value
+                    }).then(res => {
+                        if( res.code === 200) {
+                            this.$message({ type: 'success', message: '价格修改成功'});
+                            this.getPaperList()
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({ type: 'info', message: '取消修改' });       
+            });
+        },
+        // 编辑
+        editHandle(scope) {
+            let {$index, row} = scope
+            this.createHighPaper(row.id)
         }
     }
 };

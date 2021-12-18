@@ -90,6 +90,15 @@ export const createBatchMenu = query => {
     })
 }
 
+// 菜单详情
+export const menuDetail = id => {
+    return request({
+        url: `/sys/history/examNew/menu/detail/${id}`,
+        medhtod: 'get',
+        isLogin: true
+    })
+}
+
 // 删除菜单
 export const deleteMenu = query => {
     console.log(query)
@@ -222,6 +231,50 @@ export const createPaper = query => {
         url: '/sys/history-paper-v2/save',
         method: 'post',
         data: query,
+        isLogin: true
+    })
+}
+
+// 批量审核高分试卷
+// /sys/history-paper-v2/updateAuditStatus
+export const updateAuditStatusHistoryPaper = query => {
+    return request({
+        url: '/sys/history-paper-v2/updateAuditStatus',
+        method: 'post',
+        data: query,
+        isLogin: true
+    })
+}
+
+// 批量修改价格
+// /sys/history-paper-v2/updatePrice
+export const updateAuditPricePaper = query => {
+    return request({
+        url: '/sys/history-paper-v2/updatePrice',
+        method: 'post',
+        data: query,
+        isLogin: true
+    })
+}
+
+
+// 批量修改版权信息
+// /sys/history-paper-v2/updateCopyright
+export const updateAuditCopyrightPaper = query => {
+    return request({
+        url: '/sys/history-paper-v2/updateCopyright',
+        method: 'post',
+        data: query,
+        isLogin: true
+    })
+}
+
+// 高分试卷详情
+// /sys/history-paper-v2/detail/{id}
+export const paperDetail = id => {
+    return request({
+        url: `/sys/history-paper-v2/detail/${id}`,
+        method: 'get',
         isLogin: true
     })
 }

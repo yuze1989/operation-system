@@ -48,14 +48,23 @@
                         <el-col :span="18" :offset="6">
                             试卷图片：
                             <div class="item-img-box">
-                                <el-upload
-                                    action="https://test-ykh.msjsol.com/sys/file/imageUpload"                                    
-                                    :headers="header" multiple :limit="limitPictureNumber"
-                                    list-type="picture-card"
-                                    :on-success="handleSuccess"
-                                    :on-remove="handleRemove">
-                                    <i class="el-icon-plus"></i>
-                                </el-upload>
+                                <div class="file-list">
+                                    <div class="img" v-for="(item, index) in params.imgs" :key="index">
+                                        <img :src="item.hdImg" @click="previewImg(item)" alt="">
+                                        <el-input type="text" placeholder="描述" v-model="item.description"></el-input>
+                                    </div>
+                                    <el-upload
+                                        action="https://test-ykh.msjsol.com/sys/file/imageUpload"                                    
+                                        :headers="header" multiple :limit="limitPictureNumber"
+                                        list-type="picture-card"
+                                        :on-success="handleSuccess"
+                                        :on-remove="handleRemove">
+                                        <i class="el-icon-plus"></i>
+                                    </el-upload>
+                                </div>
+                                <el-dialog v-model="dialogVisible">
+                                    <img width="100%" :src="dialogImageUrl" alt="">
+                                </el-dialog>
                             </div>
                         </el-col>
                     </el-row>
@@ -70,9 +79,9 @@
 </template>
 
 <script>
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, reactive, ref, toRefs } from "vue";
 import { useRouter } from "vue-router";
-import {createPaper, getSubjectSelectors, questionList} from '@/api/exam'
+import {createPaper, getSubjectSelectors, questionList, paperDetail} from '@/api/exam'
 export default {
     name: "newpaper",
     setup() {
@@ -94,9 +103,19 @@ export default {
         let examId = ref('')
         let subjectList = ref([])
         let problems = ref([])
+        let dialog = reactive({
+            dialogImageUrl: '',
+            dialogVisible: false,
+            disabled: false
+        })
         onMounted(() => {
-            let query = router.currentRoute.value.query
-            questions(query.id)
+            let query = router.currentRoute.value.query,
+                { id, pid } = query
+            if(id) {
+                questions(query.id)
+            } else if(pid) {
+                getPaperDetail(pid)
+            }
         })
         let questions = (id) => {
             questionList(id).then(res => {
@@ -105,6 +124,12 @@ export default {
                 if(code === 200) {
                     subjectList.value = data.subjects
                 }
+            })
+        }
+        // 获取详情
+        let getPaperDetail = (id) => {
+            paperDetail(id).then(res => {
+                console.log(res)
             })
         }
 
@@ -116,7 +141,8 @@ export default {
             examId,
             subjectList,
             problems,
-            limitPictureNumber
+            limitPictureNumber,
+            ...toRefs(dialog)
         };
     },
     methods: {
@@ -140,11 +166,17 @@ export default {
                 console.log(res)
             })
         },
+        //预览图片
+        previewImg(file) {
+            console.log(file)
+            this.dialogImageUrl = file.hdImg;
+            this.dialogVisible = true;
+        },
         // 图片上传成功
         handleSuccess(response, file, fileList) {
             console.log('handleSuccess', response, file, fileList)
             this.params.imgs.push({
-                description: file.name,
+                description: '',
                 uid: file.uid,
                 hdImg: response.data
             })
@@ -168,6 +200,7 @@ export default {
         },
         // 保存
         savePaper() {
+            console.log(this.params)
             createPaper(this.params).then(res => {
                 console.log(res)
                 let {code} = res
@@ -181,7 +214,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .paper-new-container{
     padding: 20px;
     box-sizing: border-box;
@@ -219,7 +252,7 @@ export default {
     align-items: center;
 }
 .paper-new-condition .el-col .el-input{
-    width: 200px !important;
+    width: 200px;
 }
 .paper-new-condition .el-col .el-date-editor.el-input{
     width: 200px;
@@ -254,5 +287,31 @@ export default {
 
 .item-img-box{
     flex: 1;
+}
+
+.item-img-box .file-list{
+    display: flex;
+    flex-wrap: wrap
+}
+.item-img-box .file-list .img{
+    padding:0 5px;
+    box-sizing: border-box;
+    width: 164px;
+    border-radius: 5px;
+}
+.item-img-box .file-list .img .el-input{
+    width: 100%;
+}
+.item-img-box .file-list .img img{
+    width: 100%;
+    height: 146px;
+    border-radius: 5px;
+}
+.item-img-box .el-upload-list,
+.item-img-box .el-upload-list.el-upload-list--picture-card {
+    display: none;
+}
+.el-dialog .el-dialog__body img{
+    width: 100%;
 }
 </style>

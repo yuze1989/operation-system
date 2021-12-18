@@ -1,9 +1,9 @@
 <template>
-    <div class="school-container">
+    <div class="category-container">
         <el-row :gutter="20">
             <el-col :span="20" :offset="2">
-                <div class="title">高校信息</div>
-                <div class="school-condition">
+                <div class="title">高校菜单配置</div>
+                <div class="category-condition">
                     <el-row>
                         <el-col :span="6" :offset="6">
                             高校名称：
@@ -207,17 +207,17 @@ export default {
 </script>
 
 <style scoped>
-.school-container{
+.category-container{
     padding: 20px;
     box-sizing: border-box;
     background: #FFFFFF;
 }
 
-.school-container .el-row {
+.category-container .el-row {
     margin-bottom: 20px;
 }
 
-.school-container .title{
+.category-container .title{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -225,31 +225,31 @@ export default {
     font-size: 24px;
 }
 
-.school-container .el-table{
+.category-container .el-table{
     text-align: center;
 }
-.school-container .el-table .el-link{
+.category-container .el-table .el-link{
     margin: 0 5px;
 }
-.school-container .el-pagination{
+.category-container .el-pagination{
     display: flex;
     justify-content: center;
     align-items: center;
     height: 50px;
 }
 
-.school-condition .el-col{
+.category-condition .el-col{
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-.school-condition .el-col .el-select{
+.category-condition .el-col .el-select{
     width: 200px;
 }
-.school-condition .el-col .el-input{
+.category-condition .el-col .el-input{
     width: 200px !important;
 }
-.school-condition .el-col .el-date-editor.el-input{
+.category-condition .el-col .el-date-editor.el-input{
     width: 200px;
 }
 </style>

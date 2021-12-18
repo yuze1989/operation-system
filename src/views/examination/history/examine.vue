@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { onMounted, reactive, ref, toRefs } from "vue";
+import { onDeactivated, onMounted, reactive, ref, toRefs } from "vue";
 import { useRouter } from "vue-router";
 import { updateAuditStatus } from '@/api/exam'
 
@@ -57,7 +57,11 @@ export default {
             status: '',
             remarks: ''
         })
-
+        onDeactivated(() => {
+            params.id = ''
+            params.status = ''
+            params.remarks = ''
+        })
         onMounted(() => {
             let {query} = router.currentRoute.value
             params.id = query.id
@@ -72,14 +76,14 @@ export default {
     },
     methods: {
         saveStatus(){
-            console.log(this)
+            console.log(this, this.id.split(','))
             updateAuditStatus({
-                id: this.id,
+                id: this.id.split(','),
                 auditStatus: this.status,
                 // remarks: this.remarks
             }).then(res => {
                 if(res.code === 200) {
-                    this.$message({ type: 'success', message: '添加成功!' });
+                    this.$message({ type: 'success', message: '审核成功!' });
                     this.router.push('/examination/history/');
                 }
             })

@@ -2,7 +2,7 @@
     <div class="side-container">
         <el-row :gutter="20">
             <el-col :span="18">
-                <div class="create-title">新增历年考题菜单</div>
+                <div class="create-title">修改历年考题菜单</div>
                 <div class="create-content">
                     <div class="content-item">
                         考试类型：
@@ -29,19 +29,18 @@
                             </div>
                         </div>
                     </div>
-                    <div class="content-new">
-                        <el-button type="primary" size="mini" @click="addFirstMenu">添加一级菜单</el-button>
-                    </div>
                     <div class="content-save">
                         <el-button type="primary" @click="saveMenus">保存</el-button>
                     </div>
                 </div>
             </el-col>
         </el-row>
+        <vue-core-image-upload></vue-core-image-upload>
     </div>
 </template>
 
 <script>
+import VueCoreImageUpload  from 'vue-core-image-upload'
 import { onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { createMenu, createBatchMenu, menuDetail } from '@/api/exam'
@@ -56,7 +55,17 @@ export default {
             { type: 1, value: '高考'},
             { type: 2, value: 'Top美考'}
         ])
-        
+        onMounted(() => {
+            let query = router.currentRoute.value.query
+            getMenuDetail(query.id)
+        })
+        // 获取菜单详情
+        let getMenuDetail = id => {
+            menuDetail(id).then(res => {
+                console.log(res)
+            })
+        }
+
         return {
             router,
             createSideMenu,
@@ -64,10 +73,10 @@ export default {
             selectType
         }
     },
+    components: {
+        'vue-core-image-upload': VueCoreImageUpload
+    },
     methods: {
-        addFirstMenu() {
-            this.createSideMenu.push({name: '', levelTwo: []})
-        },
         addSecondMenu(e) {
             let { index } = e.currentTarget.dataset,
                 _data     = this.createSideMenu;
@@ -85,7 +94,7 @@ export default {
                 this.createSideMenu[index]['levelTwo'] = levelTwo
             } else {
                 // 删除一级菜单
-                this.createSideMenu.splice(index, 1)
+                this.createSideMenu.splice(i, 1)
             }
         },
         // 保存菜单

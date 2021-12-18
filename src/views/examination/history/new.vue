@@ -1,11 +1,11 @@
 <template>
     <div class="history-new-container">
         <el-row :gutter="20">
-            <el-col :span="12" :offset="6">
+            <el-col :span="16" :offset="4">
                 <div class="title">添加历年考题</div>
                 <div class="history-new-condition">
                     <el-row>
-                        <el-col :span="2" :offset="5">
+                        <el-col :span="3" :offset="5">
                             考试类型：
                         </el-col>
                         <el-col :span="12">
@@ -21,7 +21,7 @@
                         </el-col>
                     </el-row>    
                     <el-row>
-                        <el-col :span="2" :offset="5">
+                        <el-col :span="3" :offset="5">
                             主办方：
                         </el-col>
                         <el-col :span="12">
@@ -46,7 +46,7 @@
                         </el-col>
                     </el-row>
                     <el-row>    
-                        <el-col :span="2" :offset="5">
+                        <el-col :span="3" :offset="5">
                             考试年份：
                         </el-col>
                         <el-col :span="12">
@@ -59,7 +59,7 @@
                         </el-col>
                     </el-row>
                     <el-row>
-                        <el-col :span="2" :offset="5">
+                        <el-col :span="3" :offset="5">
                             专业：
                         </el-col>
                         <el-col :span="12">
@@ -67,7 +67,7 @@
                         </el-col>
                     </el-row>
                     <el-row>
-                        <el-col :span="2" :offset="5">
+                        <el-col :span="3" :offset="5">
                             考试名称：
                         </el-col>
                         <el-col :span="12">
@@ -135,14 +135,44 @@
                         </el-col>
                         <el-col :span="20">
                             <div class="item-img-box">
-                                <el-upload
-                                    action="https://test-ykh.msjsol.com/sys/file/imageUpload"                                    
-                                    :headers="header" multiple :limit="limitPictureNumber"
-                                    list-type="picture-card"
-                                    :on-success="(response, file, fileList) => handleSuccess(response, file, fileList, index)"
-                                    :on-remove="(file, fileList) => handleRemove(file, fileList, index)">
-                                    <i class="el-icon-plus"></i>
-                                </el-upload>
+                                <div class="file-list">
+                                    <div class="img" v-for="(item, index) in item['imgs']" :key="index">
+                                        <img :src="item.hdImg" @click="previewImg(item)" alt="">
+                                        <el-input type="text" placeholder="描述" v-model="item.description"></el-input>
+                                    </div>
+                                    <el-upload
+                                        action="https://test-ykh.msjsol.com/sys/file/imageUpload"                                    
+                                        :headers="header" multiple :limit="limitPictureNumber"
+                                        list-type="picture-card"
+                                        :on-preview="handlePictureCardPreview"
+                                        :on-success="(response, file, fileList) => handleSuccess(response, file, fileList, index)"
+                                        :on-remove="(file, fileList) => handleRemove(file, fileList, index)">
+                                        <i class="el-icon-plus"></i>
+                                        <template v-slot:scope="scope">
+                                            <div>
+                                                <img
+                                                    class="el-upload-list__item-thumbnail"
+                                                    :src="scope.url" alt=""
+                                                >
+                                                <span class="el-upload-list__item-actions">
+                                                    <span
+                                                    class="el-upload-list__item-preview"
+                                                    @click="handlePictureCardPreview(file)"
+                                                    >
+                                                    <i class="el-icon-zoom-in"></i>
+                                                    </span>
+                                                    <span
+                                                    v-if="!disabled"
+                                                    class="el-upload-list__item-delete"
+                                                    @click="handleRemove(file)"
+                                                    >
+                                                    <i class="el-icon-delete"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </template>
+                                    </el-upload>
+                                </div>
                                 <el-dialog v-model="dialogVisible">
                                     <img width="100%" :src="dialogImageUrl" alt="">
                                 </el-dialog>
@@ -187,14 +217,16 @@ export default {
             SYS_TOKEN: token
         })
         let typeList = ref([
-            {type: '0', value: '高考'},
+            {type: '0', value: '模考'},
             {type: '1', value: '模考'},
+            {type: '2', value: 'top美考'}
         ])
         let dialog = reactive({
             dialogImageUrl: '',
             dialogVisible: false,
             disabled: false
         })
+        let fileList = ref([])
         let limitPictureNumber = ref(50)
         let pictureList = ref([])
         let params = reactive({
@@ -286,6 +318,18 @@ export default {
             let {index} = e.currentTarget.dataset;
             this.subjectData.splice(index, 1)
         },
+        //预览图片
+        previewImg(file) {
+            console.log(file)
+            this.dialogImageUrl = file.hdImg;
+            this.dialogVisible = true;
+        },
+        //预览图片
+        handlePictureCardPreview(file) {
+            console.log(file)
+            this.dialogImageUrl = file.url;
+            this.dialogVisible = true;
+        },
         // 图片上传成功
         handleSuccess(response, file, fileList, index) {
             console.log('handleSuccess', response, file, fileList, index)
@@ -293,7 +337,7 @@ export default {
                 // name: file.name,
                 // uid: file.uid,
                 // url: response.data,
-                description: file.name,
+                description: '',
                 hdImg: response.data,
                 id: file.uid
             })
@@ -314,12 +358,6 @@ export default {
                     array.splice(index, 1);
                     return 
             })
-            // pictureList.forEach((item, index) => {
-            //     if(item.uid === uid) {
-            //         this.pictureList.splice(index, 1);
-            //         return 
-            //     }
-            // })
             console.log('object', this.subjectData)
         },
         handleLimit(file, fileList) {
@@ -331,13 +369,13 @@ export default {
             console.log(this.subjectData)
             let { parent, children, year, type, specialty, name } = this.params
             let imgs = this.subjectData[0]['imgs']
-            this.pictureList.forEach((item, index) => {
-                imgs.push({
-                    description: item.name,
-                    hdImg: item.url,
-                    id: index
-                })
-            })
+            // this.pictureList.forEach((item, index) => {
+            //     imgs.push({
+            //         description: item.name,
+            //         hdImg: item.url,
+            //         id: index
+            //     })
+            // })
             let data = {
                 menuId: children, 
                 id: parent, 
@@ -347,6 +385,7 @@ export default {
                 name,
                 questions: this.subjectData
             }
+            console.log(data)
             createHistoryExam(data).then(res => {
                 console.log(res)
                 let {code} = res
@@ -360,7 +399,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .history-new-container{
     padding: 20px;
     box-sizing: border-box;
@@ -429,6 +468,21 @@ export default {
     flex: 1;
 
 }
+.item-img-box .file-list{
+    display: flex;
+    flex-wrap: wrap
+}
+.item-img-box .file-list .img{
+    padding: 5px;
+    box-sizing: border-box;
+    width: 164px;
+    border-radius: 5px;
+}
+.item-img-box .file-list .img img{
+    width: 100%;
+    height: 146px;
+    border-radius: 5px;
+}
 /* .history-subject .subject-item:first-child{
     margin-top: 0;
 } */
@@ -442,5 +496,12 @@ export default {
 /* 上传图片样式 */
 .item-img-box .el-upload-list--picture-card .el-upload-list__item {
     height: 178px;
+}
+.item-img-box .el-upload-list,
+.item-img-box .el-upload-list.el-upload-list--picture-card {
+    display: none;
+}
+.el-dialog .el-dialog__body img{
+    width: 100%;
 }
 </style>

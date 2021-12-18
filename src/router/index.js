@@ -151,6 +151,14 @@ const routes = [
                 component: () => import ( /* webpackChunkName: "logs" */ "../views/examination/sideConfigure/new.vue")
             },
             {
+                path: "/examination/sideConfigure/detail",
+                name: "editSideConfigure",
+                meta: {
+                    title: '修改历年考题菜单配置'
+                },
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/examination/sideConfigure/detail.vue")
+            },
+            {
                 path: "/examination/history",
                 name: "history",
                 meta: {
@@ -237,6 +245,22 @@ const routes = [
                     title: '新增高校'
                 },
                 component: () => import ( /* webpackChunkName: "logs" */ "../views/schoolManage/new.vue")
+            },
+            {
+                path: "/schoolManage/category",
+                name: "SchoolCategory",
+                meta: {
+                    title: '高校分类'
+                },
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/schoolManage/category.vue")
+            },
+            {
+                path: "/schoolManage/category",
+                name: "newSchoolCategory",
+                meta: {
+                    title: '新增高校分类'
+                },
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/schoolManage/createCategory.vue")
             },
             // {
             //     path: "/banner",

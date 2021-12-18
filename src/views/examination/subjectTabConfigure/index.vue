@@ -1,7 +1,7 @@
 <template>
     <div class="subject-container">
         <el-row :gutter="20">
-            <el-col :span="18">
+            <el-col :span="18" :offset="3">
                 <div class="title">科目信息</div>
                 <el-button type="primary" @click="createSubject">新增科目</el-button>
                 <el-table

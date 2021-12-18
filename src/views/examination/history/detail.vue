@@ -1,54 +1,41 @@
 <template>
     <div class="history-new-container">
         <el-row :gutter="20">
-            <el-col :span="12" :offset="6">
+            <el-col :span="16" :offset="4">
                 <div class="title">添加历年考题</div>
                 <div class="history-new-condition">
                     <el-row>
-                        <el-col :span="12">
+                        <el-col :span="3" :offset="5">
                             考试类型：
-                            <div class="">
-                                <el-select v-model="params.type" clearable
-                                    @change="changeSelector($event, 'type')" placeholder="请选择考题类型">
-                                    <el-option
-                                        v-for="item in typeList"
-                                        :key="item.type"
-                                        :label="item.value"
-                                        :value="item.type">
-                                    </el-option>
-                                </el-select>
-                            </div>
                         </el-col>
                         <el-col :span="12">
-                            考试年份：
-                            <div class="">
-                                <el-date-picker
-                                    v-model="params.year"
-                                    value-format="YYYY"
-                                    type="year">
-                                </el-date-picker>
-                            </div>
+                            <el-select v-model="params.type" clearable
+                                @change="changeSelector($event, 'type')" placeholder="请选择考题类型">
+                                <el-option
+                                    v-for="item in typeList"
+                                    :key="item.type"
+                                    :label="item.value"
+                                    :value="item.type">
+                                </el-option>
+                            </el-select>
                         </el-col>
-                    </el-row>
+                    </el-row>    
                     <el-row>
-                        <el-col :span="12">
+                        <el-col :span="3" :offset="5">
                             主办方：
-                            <div class="">
-                                <el-select v-model="params.parent" clearable
-                                    @change="changeSelector($event, 'parent')" placeholder="请选择考题类型">
-                                    <el-option
-                                        v-for="(item, index) in parentMenus"
-                                        :key="index"
-                                        :label="item.name"
-                                        :value="item.id">
-                                    </el-option>
-                                </el-select>
-                            </div>
                         </el-col>
                         <el-col :span="12">
-                            <div class="">
-                                <el-select v-model="params.children" clearable
-                                    @change="changeSelector($event, 'children')" placeholder="请选择考题类型">
+                            <el-select v-model="params.parent" clearable
+                                @change="changeSelector($event, 'parent')" placeholder="请选择在app上显示院校或主办方归属">
+                                <el-option
+                                    v-for="(item, index) in parentMenus"
+                                    :key="index"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
+                            <el-select v-model="params.children" clearable
+                                    @change="changeSelector($event, 'children')" placeholder="请选择在app上显示院校或主办方名称">
                                     <el-option
                                         v-for="(item, index) in childrenMenus"
                                         :key="index"
@@ -56,17 +43,35 @@
                                         :value="item.id">
                                     </el-option>
                                 </el-select>
-                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>    
+                        <el-col :span="3" :offset="5">
+                            考试年份：
+                        </el-col>
+                        <el-col :span="12">
+                            <el-date-picker
+                                v-model="params.year"
+                                value-format="YYYY"
+                                type="year"
+                                placeholder="请选择年份">
+                            </el-date-picker>
                         </el-col>
                     </el-row>
                     <el-row>
-                        <el-col :span="12">
+                        <el-col :span="3" :offset="5">
                             专业：
-                            <el-input type="text" v-model="params.specialty"></el-input>
                         </el-col>
                         <el-col :span="12">
+                            <el-input type="text" v-model="params.specialty" placeholder="请输入专业"></el-input>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="3" :offset="5">
                             考试名称：
-                            <el-input type="text" v-model="params.name"></el-input>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-input type="text" v-model="params.name" placeholder="请输入考试名称"></el-input>
                         </el-col>
                     </el-row>
                 </div>
@@ -75,71 +80,116 @@
                 </div>
                 <div class="history-new-condition history-subject" v-for="(item, index) in subjectData" :key="index">
                     <el-row>
-                        <el-col class="subject-item">
+                        <el-col class="subject-item" :span="3">
                             考试科目：
-                            <div class="">
-                                <el-select v-model="item.subjectId" clearable
-                                    @change="changeSelector($event)" placeholder="请选择考题类型">
-                                    <el-option
-                                        v-for="(item, index) in subjectSelectors"
-                                        :key="index"
-                                        :label="item.name"
-                                        :value="item.id">
-                                    </el-option>
-                                </el-select>
-                            </div>
                         </el-col>
-                        <el-col class="subject-item">
+                        <el-col :span="12">
+                            <el-select v-model="item.subjectId" clearable
+                                @change="changeSelector($event)" placeholder="请选择考题类型">
+                                <el-option
+                                    v-for="(item, index) in subjectSelectors"
+                                    :key="index"
+                                    :label="item.name"
+                                    :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col class="subject-item" :span="3">
                             考试题目：
-                            <div class="">
-                                <el-input placeholder="请输入考试题目" v-model="item.title"></el-input>
-                            </div>
                         </el-col>
-                        <el-col class="subject-item">
+                        <el-col :span="12">
+                            <el-input placeholder="请输入考试题目" v-model="item.title"></el-input>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col class="subject-item" :span="3">
                             考试时间：
-                            <div class="">
-                                <el-date-picker
-                                    v-model="item.examDate"
-                                    type="date"
-                                    value-format="YYYY-MM-DD"
-                                    placeholder="选择日期">
-                                </el-date-picker>
-                            </div>
+                            </el-col>
+                        <el-col :span="12">
+                            <el-date-picker
+                                v-model="item.examDate"
+                                type="date"
+                                value-format="YYYY-MM-DD"
+                                placeholder="选择日期">
+                            </el-date-picker>
                         </el-col>
-                        <el-col class="subject-item">
+                    </el-row>
+                    <el-row>
+                        <el-col class="subject-item" :span="3">
                             考试内容与简介：
-                            <div class="">
-                                <el-input
-                                    type="textarea"
-                                    autosize
-                                    placeholder="请输入内容"
-                                    v-model="item.content">
-                                </el-input>
-                            </div>
+                            </el-col>
+                        <el-col :span="12">
+                            <el-input
+                                type="textarea"
+                                :autosize="{ minRows: 4}"
+                                placeholder="请输入内容"
+                                v-model="item.content">
+                            </el-input>
                         </el-col>
-                        <el-col class="subject-item">
+                    </el-row>
+                    <el-row>
+                        <el-col class="subject-item" :span="3">
                             考试图片：
+                        </el-col>
+                        <el-col :span="20">
                             <div class="item-img-box">
-                                <el-upload
-                                    action="https://test-ykh.msjsol.com/sys/file/imageUpload"                                    
-                                    :headers="header" multiple :limit="limitPictureNumber"
-                                    list-type="picture-card"
-                                    :on-success="(response, file, fileList) => handleSuccess(response, file, fileList, index)"
-                                    :on-remove="(file, fileList) => handleRemove(file, fileList, index)">
-                                    <i class="el-icon-plus"></i>
-                                </el-upload>
+                                <div class="file-list">
+                                    <div class="img" v-for="(item, index) in item['imgs']" :key="index">
+                                        <img :src="item.hdImg" @click="previewImg(item)" alt="">
+                                        <el-input type="text" placeholder="描述" v-model="item.description"></el-input>
+                                    </div>
+                                    <el-upload
+                                        action="https://test-ykh.msjsol.com/sys/file/imageUpload"                                    
+                                        :headers="header" multiple :limit="limitPictureNumber"
+                                        list-type="picture-card"
+                                        :on-preview="handlePictureCardPreview"
+                                        :on-success="(response, file, fileList) => handleSuccess(response, file, fileList, index)"
+                                        :on-remove="(file, fileList) => handleRemove(file, fileList, index)">
+                                        <i class="el-icon-plus"></i>
+                                        <template v-slot:scope="scope">
+                                            <div>
+                                                <img
+                                                    class="el-upload-list__item-thumbnail"
+                                                    :src="scope.url" alt=""
+                                                >
+                                                <span class="el-upload-list__item-actions">
+                                                    <span
+                                                    class="el-upload-list__item-preview"
+                                                    @click="handlePictureCardPreview(file)"
+                                                    >
+                                                    <i class="el-icon-zoom-in"></i>
+                                                    </span>
+                                                    <span
+                                                    v-if="!disabled"
+                                                    class="el-upload-list__item-delete"
+                                                    @click="handleRemove(file)"
+                                                    >
+                                                    <i class="el-icon-delete"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </template>
+                                    </el-upload>
+                                </div>
+                                <el-dialog v-model="dialogVisible">
+                                    <img width="100%" :src="dialogImageUrl" alt="">
+                                </el-dialog>
                             </div>
                         </el-col>
-                        <el-col class="subject-item">
+                    </el-row>
+                    <el-row>
+                        <el-col class="subject-item" :span="3">
                             备注：
-                            <div class="">
-                                <el-input
-                                    type="textarea"
-                                    autosize
-                                    placeholder="请输入内容"
-                                    v-model="item.remarks">
-                                </el-input>
-                            </div>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-input
+                                type="textarea"
+                                placeholder="请输入内容"
+                                :autosize="{ minRows: 4}"
+                                v-model="item.remarks">
+                            </el-input>
                         </el-col>
                     </el-row>
                     <el-button type="danger" class="delete-button" size="mini" v-if="index !== 0" :data-index="index" @click="deleteSubject">删除</el-button>
@@ -156,9 +206,9 @@
 <script>
 import { onMounted, reactive, ref, toRefs } from "vue";
 import { useRouter } from "vue-router";
-import { getSponsorList, getSubjectSelectors, createHistoryExam, historyExamDetail } from '@/api/exam'
+import { getSponsorList, getSubjectSelectors, historyExamDetail, createHistoryExam } from '@/api/exam'
 export default {
-    name: "examineHistoryDetail",
+    name: "newHistory",
     setup() {
         let name   = localStorage.getItem("ms_username");
         let token   = localStorage.getItem("token");
@@ -167,9 +217,16 @@ export default {
             SYS_TOKEN: token
         })
         let typeList = ref([
-            {type: '0', value: '高考'},
-            {type: '1', value: '模考'},
+            {type: '0', value: '模考'},
+            {type: '1', value: '高考'},
+            {type: '2', value: 'top美考'}
         ])
+        let dialog = reactive({
+            dialogImageUrl: '',
+            dialogVisible: false,
+            disabled: false
+        })
+        let fileList = ref([])
         let limitPictureNumber = ref(50)
         let pictureList = ref([])
         let params = reactive({
@@ -193,18 +250,45 @@ export default {
             imgs: [],
             remarks: ''
         }])
-
         onMounted(() => {
-            console.log(router)
             let query = router.currentRoute.value.query
-            examDetail(query.id)
+            getExamDetail(query.id)
         })
-        // 获取详情
-        let examDetail = (id) => {
+        let getExamDetail = (id) => {
             historyExamDetail(id).then(res => {
-                console.log(res)
+                if(res.code === 200) {
+                    let {name, menuId, specialty, type, year} =  res.data
+                    params = {
+                        id: res.data.id,
+                        parent: id,
+                        children: menuId,
+                        specialty,
+                        type,
+                        name, 
+                        year
+                    }
+                    getTagList(type)
+                    getTagList(type, menuId)
+                }
+                console.log(params)
             })
         }
+
+        let getTagList = (type, parentId) => {
+            getSponsorList({
+                type: type, //考试类型 0-模考，1-高考
+                level: parentId ? 1 : 0 , //级别 0-一级，1-二级
+                parentId: parentId || 0
+            }).then(res => {
+                let {code, data, msg} = res
+                if(type && !parentId) {
+                    parentMenus.value = data
+                } else if(type && parentId) {
+                    childrenMenus.value = data
+                }
+            })
+        }
+
         // 获取科目列表
         getSubjectSelectors().then(res => {
             console.log('getSubjectSelectors', res)
@@ -224,7 +308,9 @@ export default {
             subjectSelectors,
             pictureList,
             limitPictureNumber,
-            historyExamDetail 
+            getExamDetail,
+            getTagList,
+            ...toRefs(dialog)
         };
     },
     methods: {
@@ -242,22 +328,6 @@ export default {
             }
             console.log('changeSelector', this.params)
         },
-        getTagList(type, parentId) {
-            getSponsorList({
-                type: type, //考试类型 0-模考，1-高考
-                level: parentId ? 1 : 0 , //级别 0-一级，1-二级
-                parentId: parentId || 0
-            }).then(res => {
-                console.log('getSponsorList', res)
-                let {code, data, msg} = res
-                if(type && !parentId) {
-                    this.parentMenus = data
-                    console.log(this.parentMenus)
-                } else if(type && parentId) {
-                    this.childrenMenus = data
-                }
-            })
-        },
         createSubject() {
             this.subjectData.push({
                 subjectId: '',
@@ -272,6 +342,18 @@ export default {
             let {index} = e.currentTarget.dataset;
             this.subjectData.splice(index, 1)
         },
+        //预览图片
+        previewImg(file) {
+            console.log(file)
+            this.dialogImageUrl = file.hdImg;
+            this.dialogVisible = true;
+        },
+        //预览图片
+        handlePictureCardPreview(file) {
+            console.log(file)
+            this.dialogImageUrl = file.url;
+            this.dialogVisible = true;
+        },
         // 图片上传成功
         handleSuccess(response, file, fileList, index) {
             console.log('handleSuccess', response, file, fileList, index)
@@ -279,7 +361,7 @@ export default {
                 // name: file.name,
                 // uid: file.uid,
                 // url: response.data,
-                description: file.name,
+                description: '',
                 hdImg: response.data,
                 id: file.uid
             })
@@ -300,12 +382,6 @@ export default {
                     array.splice(index, 1);
                     return 
             })
-            // pictureList.forEach((item, index) => {
-            //     if(item.uid === uid) {
-            //         this.pictureList.splice(index, 1);
-            //         return 
-            //     }
-            // })
             console.log('object', this.subjectData)
         },
         handleLimit(file, fileList) {
@@ -317,13 +393,6 @@ export default {
             console.log(this.subjectData)
             let { parent, children, year, type, specialty, name } = this.params
             let imgs = this.subjectData[0]['imgs']
-            this.pictureList.forEach((item, index) => {
-                imgs.push({
-                    description: item.name,
-                    hdImg: item.url,
-                    id: index
-                })
-            })
             let data = {
                 menuId: children, 
                 id: parent, 
@@ -333,6 +402,7 @@ export default {
                 name,
                 questions: this.subjectData
             }
+            console.log(data)
             createHistoryExam(data).then(res => {
                 console.log(res)
                 let {code} = res
@@ -346,7 +416,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .history-new-container{
     padding: 20px;
     box-sizing: border-box;
@@ -383,8 +453,12 @@ export default {
     /* justify-content: space-between; */
     align-items: center;
 }
+.history-new-condition .el-col .el-input,
+.history-new-condition .el-col .el-select,
+.history-new-condition .el-col .el-date-picker,
+.history-new-condition .el-col .el-date-editor,
 .history-new-condition .el-col .el-input{
-    width: 200px !important;
+    flex: 1;
 }
 .history-new-condition .el-col .el-date-editor.el-input{
     width: 200px;
@@ -411,6 +485,21 @@ export default {
     flex: 1;
 
 }
+.item-img-box .file-list{
+    display: flex;
+    flex-wrap: wrap
+}
+.item-img-box .file-list .img{
+    padding: 5px;
+    box-sizing: border-box;
+    width: 164px;
+    border-radius: 5px;
+}
+.item-img-box .file-list .img img{
+    width: 100%;
+    height: 146px;
+    border-radius: 5px;
+}
 /* .history-subject .subject-item:first-child{
     margin-top: 0;
 } */
@@ -424,5 +513,12 @@ export default {
 /* 上传图片样式 */
 .item-img-box .el-upload-list--picture-card .el-upload-list__item {
     height: 178px;
+}
+.item-img-box .el-upload-list,
+.item-img-box .el-upload-list.el-upload-list--picture-card {
+    display: none;
+}
+.el-dialog .el-dialog__body img{
+    width: 100%;
 }
 </style>

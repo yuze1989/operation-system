@@ -5,17 +5,17 @@
                 <div class="title">历年考题菜单配置</div>
                 <div class="side-condition">
                     <el-row>
-                        <el-col :span="5" :offset="4">
+                        <el-col :span="6" :offset="4">
                             一级菜单：
                             <el-input v-model="params.levelOneName" clearable data-name="firstMenu" @input="changeValue" placeholder="请输入内容" ></el-input>
                         </el-col>
-                        <el-col :span="5" :offset="2">
+                        <el-col :span="6" :offset="2">
                             二级菜单：
                             <el-input v-model="params.levelTwoName" clearable data-name="secondMenu" @input="changeValue" placeholder="请输入内容" ></el-input>
                         </el-col>
                     </el-row>
                     <el-row>
-                        <el-col :span="5" :offset="4">
+                        <el-col :span="6" :offset="4">
                             操作类型：
                             <el-select v-model="params.type" clearable
                                 name="type" @change="changeSelector($event)" placeholder="请选择考题类型">
@@ -50,7 +50,8 @@
                     </el-table-column>
                     <el-table-column label="操作">
                         <template class="template" v-slot="scope">
-                            <el-link type="danger" href="javascript:void(0);" @click="deleteMenu(scope)">删除</el-link>
+                            <el-button type="text" @click="editMenu(scope)">修改</el-button>
+                            <el-button type="text" @click="deleteMenu(scope)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -132,6 +133,7 @@ export default {
 
         return {
             name,
+            router,
             tableData,
             loading,
             pageTotal,
@@ -200,6 +202,12 @@ export default {
                     message: '已取消删除'
                 });
             });
+        },
+        // 编辑
+        editMenu(scope) {
+            console.log(scope)
+            let {$index, row} = scope
+            this.router.push(`/examination/sideConfigure/detail?id=${row.id}`)
         }
     }
 };

@@ -38,9 +38,9 @@
 </template>
 
 <script>
-import { onMounted, reactive, ref, toRefs } from "vue";
+import { onMounted, onDeactivated, reactive, ref, toRefs } from "vue";
 import { useRouter } from "vue-router";
-import { updateAuditStatus } from '@/api/exam'
+import { updateAuditStatusHistoryPaper } from '@/api/exam'
 
 export default {
     name: 'examineHighScorePaper',
@@ -62,7 +62,11 @@ export default {
             let {query} = router.currentRoute.value
             params.id = query.id
         })
-
+        onDeactivated(() => {
+            params.id = ''
+            params.status = ''
+            params.remarks = ''
+        })
         return {
             disabled,
             statusList,
@@ -73,14 +77,14 @@ export default {
     methods: {
         saveStatus(){
             console.log(this)
-            updateAuditStatus({
-                id: this.id,
+            updateAuditStatusHistoryPaper({
+                id: this.id.split(','),
                 auditStatus: this.status,
                 // remarks: this.remarks
             }).then(res => {
                 if(res.code === 200) {
-                    this.$message({ type: 'success', message: '添加成功!' });
-                    this.router.push('/examination/history/');
+                    this.$message({ type: 'success', message: '审核成功!' });
+                    this.router.push('/examination/highScorePaper');
                 }
             })
         },
