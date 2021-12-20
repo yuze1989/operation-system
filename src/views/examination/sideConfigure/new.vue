@@ -2,7 +2,7 @@
     <div class="side-container">
         <el-row :gutter="20">
             <el-col :span="18">
-                <div class="create-title">新增历年考题菜单</div>
+                <div class="create-title">新增侧边栏菜单配置</div>
                 <div class="create-content">
                     <div class="content-item">
                         考试类型：

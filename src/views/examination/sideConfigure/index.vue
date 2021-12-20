@@ -2,7 +2,7 @@
     <div class="side-container">
         <el-row :gutter="20">
             <el-col :span="18" :offset="3">
-                <div class="title">历年考题菜单配置</div>
+                <div class="title">侧边栏菜单配置</div>
                 <div class="side-condition">
                     <!-- <el-row>
                         <el-col :span="6" :offset="4">

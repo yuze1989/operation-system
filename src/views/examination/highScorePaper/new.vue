@@ -49,9 +49,10 @@
                             试卷图片：
                             <div class="item-img-box">
                                 <div class="file-list">
-                                    <div class="img" v-for="(item, index) in params.imgs" :key="index">
-                                        <img :src="item.hdImg" @click="previewImg(item)" alt="">
-                                        <el-input type="text" placeholder="描述" v-model="item.description"></el-input>
+                                    <div class="img" v-for="(itl, i) in params.imgs" :key="i">
+                                        <img :src="itl.hdImg" @click="previewImg(itl)" alt="">
+                                        <span class="delete-icon" @click="removeHdImg(i)">x</span>
+                                        <el-input type="text" placeholder="描述" v-model="itl.description"></el-input>
                                     </div>
                                     <el-upload
                                         action="https://test-ykh.msjsol.com/sys/file/imageUpload"                                    
@@ -79,7 +80,7 @@
 </template>
 
 <script>
-import { onMounted, reactive, ref, toRefs } from "vue";
+import { onBeforeUnmount, onMounted, reactive, ref, toRefs } from "vue";
 import { useRouter } from "vue-router";
 import {createPaper, getSubjectSelectors, questionList, paperDetail} from '@/api/exam'
 export default {
@@ -116,6 +117,15 @@ export default {
             } else if(pid) {
                 getPaperDetail(pid)
             }
+        })
+        onBeforeUnmount(() => {
+            console.log('onBeforeUnmount')
+            params = {
+                copyright: '',
+                imgs: [],
+                price: 0,
+                questionId: ''
+            } 
         })
         let questions = (id) => {
             questionList(id).then(res => {
@@ -171,6 +181,12 @@ export default {
             console.log(file)
             this.dialogImageUrl = file.hdImg;
             this.dialogVisible = true;
+        },
+        // 自定义删除图片
+        removeHdImg(index, i) {
+            console.log('object', index, i)
+            this.params.imgs.splice(i, 1)
+            console.log(this.params.imgs)
         },
         // 图片上传成功
         handleSuccess(response, file, fileList) {
@@ -294,10 +310,26 @@ export default {
     flex-wrap: wrap
 }
 .item-img-box .file-list .img{
+    position: relative;
     padding:0 5px;
     box-sizing: border-box;
     width: 164px;
     border-radius: 5px;
+}
+.item-img-box .file-list .img .delete-icon{
+    display: inline-block;
+    vertical-align: middle;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(25%, -25%);
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    border-radius: 50%;
+    background: #FFFFFF;
+    cursor: pointer;
+    z-index: 999;
 }
 .item-img-box .file-list .img .el-input{
     width: 100%;

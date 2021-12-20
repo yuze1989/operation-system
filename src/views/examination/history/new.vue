@@ -122,7 +122,7 @@
                             </el-col>
                         <el-col :span="12">
                             <el-input
-                                type="textarea"
+                                type="textarea" maxlength="1000"
                                 :autosize="{ minRows: 4}"
                                 placeholder="请输入内容"
                                 v-model="item.content">
@@ -136,9 +136,10 @@
                         <el-col :span="20">
                             <div class="item-img-box">
                                 <div class="file-list">
-                                    <div class="img" v-for="(item, index) in item['imgs']" :key="index">
-                                        <img :src="item.hdImg" @click="previewImg(item)" alt="">
-                                        <el-input type="text" placeholder="描述" v-model="item.description"></el-input>
+                                    <div class="img" v-for="(itl, i) in item['imgs']" :key="i">
+                                        <img :src="itl.hdImg" @click="previewImg(itl)" alt="">
+                                        <span class="delete-icon" @click="removeHdImg(index, i)">x</span>
+                                        <el-input type="text" placeholder="描述" v-model="itl.description"></el-input>
                                     </div>
                                     <el-upload
                                         action="https://test-ykh.msjsol.com/sys/file/imageUpload"                                    
@@ -185,10 +186,10 @@
                         </el-col>
                         <el-col :span="12">
                             <el-input
-                                type="textarea"
+                                type="textarea" maxlength="500"
                                 placeholder="请输入内容"
                                 :autosize="{ minRows: 4}"
-                                v-model="item.remarks">
+                                v-model="item.remark">
                             </el-input>
                         </el-col>
                     </el-row>
@@ -247,7 +248,7 @@ export default {
             examDate: '',
             content: '',
             imgs: [],
-            remarks: ''
+            remark: ''
         }])
 
         // 获取科目列表
@@ -310,7 +311,7 @@ export default {
                 examDate: '',
                 content: '',
                 imgs: [],
-                remarks: ''
+                remark: ''
             })
         },
         deleteSubject(e) {
@@ -322,6 +323,12 @@ export default {
             console.log(file)
             this.dialogImageUrl = file.hdImg;
             this.dialogVisible = true;
+        },
+        // 自定义删除图片
+        removeHdImg(index, i) {
+            console.log('object', index, i)
+            this.subjectData[index]['imgs'].splice(i, 1)
+            console.log(this.subjectData)
         },
         //预览图片
         handlePictureCardPreview(file) {
@@ -376,7 +383,7 @@ export default {
             //     })
             // })
             let data = {
-                menuId: children, 
+                menuId: children || [], 
                 id: parent, 
                 year, 
                 type, 
@@ -472,10 +479,26 @@ export default {
     flex-wrap: wrap
 }
 .item-img-box .file-list .img{
+    position: relative;
     padding: 5px;
     box-sizing: border-box;
     width: 164px;
     border-radius: 5px;
+}
+
+.item-img-box .file-list .img .delete-icon{
+    display: inline-block;
+    vertical-align: middle;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    border-radius: 50%;
+    background: #FFFFFF;
+    cursor: pointer;
+    z-index: 999;
 }
 .item-img-box .file-list .img img{
     width: 100%;

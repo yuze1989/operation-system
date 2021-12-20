@@ -2,7 +2,7 @@
     <div class="side-container">
         <el-row :gutter="20">
             <el-col :span="18">
-                <div class="create-title">修改历年考题菜单</div>
+                <div class="create-title">修改侧边栏菜单配置</div>
                 <div class="create-content">
                     <div class="content-item">
                         考试类型：
@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { onMounted, reactive, ref } from "vue";
+import { onActivated, onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { createMenu, createBatchMenu, menuDetail } from '@/api/exam'
 export default {
@@ -58,6 +58,10 @@ export default {
             let query = router.currentRoute.value.query
             getMenuDetail(query.id)
         })
+        onActivated(() => {
+            let query = router.currentRoute.value.query
+            getMenuDetail(query.id)
+        })
         // 获取菜单详情
         let getMenuDetail = id => {
             menuDetail(id).then(res => {
@@ -65,8 +69,7 @@ export default {
                 let {code, data} = res
                 let {childMenus, ...args} = data
                 menus.value = data
-                createSideMenu.value = {...args, levelTwo: childMenus}
-                console.log(createSideMenu)
+                createSideMenu.value = {...args, levelTwo: childMenus || []}
             })
         }
 
@@ -80,10 +83,7 @@ export default {
     },
     methods: {
         addSecondMenu(e) {
-            // let { index } = e.currentTarget.dataset,
-            //     _data     = this.createSideMenu;
-            // console.log(e, index, _data[index])
-            // _data[index]['levelTwo']['push']({name: ''})
+            console.log(this.createSideMenu)
             this.createSideMenu.levelTwo.push({name: ''})
         },
         removeMenu(index) {

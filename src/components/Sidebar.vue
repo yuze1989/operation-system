@@ -159,31 +159,46 @@ export default {
           {
             icon: "el-icon-lx-calendar",
             index: "9",
+            title: "App侧边栏配置",
+            subs: [
+              {
+                index: "/schoolManage/category",
+                title: "高校侧边栏",
+              },
+              {
+                index: "/examination/sideConfigure",
+                title: "历年考题与考试信息侧边栏",
+              },
+            ],
+          },
+          {
+            icon: "el-icon-lx-calendar",
+            index: "10",
             title: "高校管理",
             subs: [
               {
                 index: "/schoolManage",
                 title: "高校管理",
               },
-              {
-                index: "/schoolManage/category",
-                title: "高校分类",
-              }
+              // {
+              //   index: "/schoolManage/category",
+              //   title: "高校分类",
+              // }
             ],
           },
           {
             icon: "el-icon-lx-calendar",
-            index: "10",
+            index: "11",
             title: "历年考题",
             subs: [
               {
                 index: "/examination/subjectTabConfigure",
                 title: "科目tab配置",
               },
-              {
-                index: "/examination/sideConfigure",
-                title: "历年考题菜单配置",
-              },
+              // {
+              //   index: "/examination/sideConfigure",
+              //   title: "侧边栏菜单配置",
+              // },
               {
                 index: "/examination/history",
                 title: "历年考题",
@@ -196,7 +211,7 @@ export default {
           },
           {
             icon: "el-icon-lx-calendar",
-            index: "11",
+            index: "12",
             title: "交易管理",
             subs: [
               {
@@ -211,7 +226,7 @@ export default {
           },
           {
             icon: "el-icon-lx-calendar",
-            index: "12",
+            index: "13",
             title: "菜单管理",
             subs: [
               {
@@ -226,7 +241,7 @@ export default {
           },
           {
             icon: "el-icon-lx-calendar",
-            index: "13",
+            index: "14",
             title: "系统管理",
             subs: [
               {
