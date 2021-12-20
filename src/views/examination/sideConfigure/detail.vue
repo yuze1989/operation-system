@@ -6,7 +6,7 @@
                 <div class="create-content">
                     <div class="content-item">
                         考试类型：
-                        <el-select v-model="selectType" placeholder="请选择">
+                        <el-select v-model="menus.type" disabled placeholder="请选择">
                             <el-option
                                 v-for="item in typeLists"
                                 :key="item.type"
@@ -15,17 +15,17 @@
                             </el-option>
                         </el-select>
                     </div>
-                    <div v-for="(item, index) in createSideMenu" :key="index" class="content-item">
+                    <div class="content-item">
+                        {{createSideMenu.length}}
                         <span class="tit">一级菜单</span>
-                        <input type="text" placeholder="请输入一级菜单名称" v-model="item.name">
-                        <el-button size="mini" @click="removeMenu(index)" :data-index="index" v-if="index !== 0">移除</el-button>
-                        <el-button size="mini" @click="addSecondMenu" :data-index="index">添加二级菜单</el-button>
-                        <div class="children-content" v-if="item.levelTwo.length">
-                            <div class="sub-item" v-for="(child, i) in item.levelTwo" :key="i">
+                        <input type="text" placeholder="请输入一级菜单名称" v-model="createSideMenu.name">
+                        <el-button size="mini" @click="addSecondMenu">添加二级菜单</el-button>
+                        <div class="children-content" v-if="createSideMenu.levelTwo && createSideMenu.levelTwo.length">
+                            <div class="sub-item" v-for="(child, i) in createSideMenu.levelTwo" :key="i">
                                 <span class="c-tit">二级菜单</span>
                                 <input type="text" placeholder="请输入二级菜单名称" v-model="child.name">
-                                <el-button size="mini" @click="removeMenu(index, i, 'second')" :data-index="i">移除</el-button>
-                                <el-button size="mini" @click="addSecondMenu" :data-index="index">添加</el-button>
+                                <el-button size="mini" @click="removeMenu(i)" :data-index="i">移除</el-button>
+                                <el-button size="mini" @click="addSecondMenu">添加</el-button>
                             </div>
                         </div>
                     </div>
@@ -45,9 +45,10 @@ import { createMenu, createBatchMenu, menuDetail } from '@/api/exam'
 export default {
     name: "newSideConfigure",
     setup() {
-        let createSideMenu = ref([{name: '', levelTwo: []}])
+        let createSideMenu = ref({name: '', levelTwo: []})
         let router         = useRouter();
         let selectType     = ref('')
+        let menus          = ref({})
         let typeLists      = ref([
             { type: 0, value: '模考'},
             { type: 1, value: '高考'},
@@ -61,6 +62,11 @@ export default {
         let getMenuDetail = id => {
             menuDetail(id).then(res => {
                 console.log(res)
+                let {code, data} = res
+                let {childMenus, ...args} = data
+                menus.value = data
+                createSideMenu.value = {...args, levelTwo: childMenus}
+                console.log(createSideMenu)
             })
         }
 
@@ -68,43 +74,39 @@ export default {
             router,
             createSideMenu,
             typeLists,
-            selectType
+            selectType,
+            menus
         }
     },
     methods: {
         addSecondMenu(e) {
-            let { index } = e.currentTarget.dataset,
-                _data     = this.createSideMenu;
-            console.log(e, index, _data[index])
-            _data[index]['levelTwo']['push']({name: ''})
-            this.createSideMenu.value = _data
+            // let { index } = e.currentTarget.dataset,
+            //     _data     = this.createSideMenu;
+            // console.log(e, index, _data[index])
+            // _data[index]['levelTwo']['push']({name: ''})
+            this.createSideMenu.levelTwo.push({name: ''})
         },
-        removeMenu(index, i, type) {
-            console.log(index, i, type)
-            if(type) {
+        removeMenu(index) {
+            console.log(index)
                 // 删除二级菜单
-                let { levelTwo } = this.createSideMenu[index]
-                console.log('object', levelTwo)
-                levelTwo.splice(i, 1)
-                this.createSideMenu[index]['levelTwo'] = levelTwo
-            } else {
-                // 删除一级菜单
-                this.createSideMenu.splice(i, 1)
-            }
+            let { levelTwo } = this.createSideMenu
+            console.log('object', levelTwo)
+            levelTwo.splice(index, 1)
+            this.createSideMenu.levelTwo = levelTwo
         },
         // 保存菜单
         saveMenus() {
             console.log(this.createSideMenu, this.selectType)
-            this.createSideMenu.forEach((menu, index, array) => array[index]['type'] = this.selectType )
+            // this.createSideMenu.forEach((menu, index, array) => array[index]['type'] = this.selectType )
             let params = {
-                levelOne: this.createSideMenu
+                levelOne: [this.createSideMenu]
             }
             console.log(params)
             createBatchMenu(params).then(res => {
                 console.log(res)
                 if(res.code === 200) {
                     this.router.push('/examination/sideConfigure')
-                    this.$message({ type: 'success', message: '删除成功!' })
+                    this.$message({ type: 'success', message: '修改成功!' })
                 }
             })
         }

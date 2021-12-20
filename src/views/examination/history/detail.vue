@@ -218,8 +218,7 @@ export default {
         })
         let typeList = ref([
             {type: '0', value: '模考'},
-            {type: '1', value: '高考'},
-            {type: '2', value: 'top美考'}
+            {type: '1', value: '高考'}
         ])
         let dialog = reactive({
             dialogImageUrl: '',

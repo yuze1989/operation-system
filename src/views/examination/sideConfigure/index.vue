@@ -4,7 +4,7 @@
             <el-col :span="18" :offset="3">
                 <div class="title">历年考题菜单配置</div>
                 <div class="side-condition">
-                    <el-row>
+                    <!-- <el-row>
                         <el-col :span="6" :offset="4">
                             一级菜单：
                             <el-input v-model="params.levelOneName" clearable data-name="firstMenu" @input="changeValue" placeholder="请输入内容" ></el-input>
@@ -13,7 +13,7 @@
                             二级菜单：
                             <el-input v-model="params.levelTwoName" clearable data-name="secondMenu" @input="changeValue" placeholder="请输入内容" ></el-input>
                         </el-col>
-                    </el-row>
+                    </el-row> -->
                     <el-row>
                         <el-col :span="6" :offset="4">
                             操作类型：
@@ -39,10 +39,21 @@
                     element-loading-text="拼命加载中"
                     border
                     stripe
+                    default-expand-all
+                    row-key="id"
+                    :tree-props="{children: 'childMenus'}"
                     style="width: 100%">
                     <el-table-column type="index" label="序号"></el-table-column>
-                    <el-table-column prop="levelOneName" label="一级菜单"></el-table-column>
-                    <el-table-column prop="levelTwoName" label="二级菜单"></el-table-column>
+                    <el-table-column prop="name" label="一级菜单">
+                        <template v-slot="scope">
+                            {{scope.row.parentId == 0 ? scope.row.name : ''}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="levelTwoName" label="二级菜单">
+                        <template v-slot="scope">
+                            {{scope.row.parentId ? scope.row.name : ''}}
+                        </template>
+                    </el-table-column>
                     <el-table-column label="考试类型">
                         <template class="template" v-slot="scope">
                             {{typeList[scope.row.type]['value']}}
@@ -50,7 +61,7 @@
                     </el-table-column>
                     <el-table-column label="操作">
                         <template class="template" v-slot="scope">
-                            <!-- <el-button type="text" @click="editMenu(scope)">修改</el-button> -->
+                            <el-button type="text" v-if="scope.row.parentId == 0" @click="editMenu(scope)">修改</el-button>
                             <el-button type="text" @click="deleteMenu(scope)">删除</el-button>
                         </template>
                     </el-table-column>
@@ -80,7 +91,7 @@ export default {
         let params = reactive({
             levelOneName: '',
             levelTwoName: '',
-            type: ''
+            type: 0
         })
         let typeList      = reactive([
             { type: 0, value: '模考'},
@@ -133,8 +144,12 @@ export default {
         }
         // 获取一级菜单列表
         let getFirstMenuList = (type) => {
-            firstMenuList({type: type || 0}).then(res => {
+            firstMenuList({type: params.type}).then(res => {
                 console.log('object', res)
+                loading.value = false
+                console.log('getMenuList', res)
+                let {code, data, msg} = res
+                tableData.value = data
             })
         }
 
@@ -148,7 +163,8 @@ export default {
             createMenu,
             params,
             typeList,
-            menuLists
+            menuLists,
+            getFirstMenuList
         };
     },
     methods: {
@@ -167,7 +183,8 @@ export default {
         // 搜索
         onSearch() {
             console.log(this)
-            this.getMenusData(1)
+            // this.getMenusData(1)
+            this.getFirstMenuList();
         },
         getMenusData(page, size) {
             this.loading = true;
@@ -187,7 +204,7 @@ export default {
         // 删除科目
         deleteMenu(scope) {
             console.log(scope)
-            let { $index, row } = scope,
+            let { $index, row, parentId } = scope,
                 _data           = this.tableData
             this.$confirm('确定要删除菜单吗?', '提示', {
                 confirmButtonText: '确定',

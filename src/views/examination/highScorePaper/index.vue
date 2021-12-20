@@ -111,7 +111,7 @@
                     </el-table-column>
                     <el-table-column label="操作">
                         <template class="template" v-slot="scope">
-                            <el-button type="text" size="mini" @click="editHandle(scope)">修改</el-button>
+                            <!-- <el-button type="text" size="mini" @click="editHandle(scope)">修改</el-button> -->
                             <el-button type="text" size="mini" @click="deletePaperHandle(scope)">删除</el-button>
                             <el-button type="text" size="mini" @click="auditHandle(scope)">审核</el-button>
                         </template>
@@ -152,7 +152,7 @@ export default {
             year: ''
         })
 
-        let examType = ref(['模考', '高考', 'top美考']) // 考试类型 0-模考 1-高考 2-top美考 
+        let examType = ref(['模考', '高考']) // 考试类型 0-模考 1-高考 2-top美考 
         let auditStatus = ref(['未审核', '通过', '不通过']) // auditStatus	integer($int32) 审核状态 0-未审核 1-通过 2-不通过
         let subjectList   = ref([])
         let loading       = ref(true);
