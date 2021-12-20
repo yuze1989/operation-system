@@ -66,6 +66,16 @@ export const getMenuList = query => {
     return request({
         url: '/sys/history/examNew/menu/list',
         method: 'post',
+        // data: query,
+        isLogin: true
+    })
+}
+
+// 菜单列表list2
+export const firstMenuList = query => {
+    return request({
+        url: `/sys/history/examNew/menu/list2?type=${query.type}`,
+        method: 'get',
         data: query,
         isLogin: true
     })

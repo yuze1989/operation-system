@@ -65,7 +65,7 @@
                     <el-table-column prop="ranking" label="app展示排序位置"></el-table-column>
                     <el-table-column label="操作">
                         <template v-slot="scope">
-                            <el-button type="text" size="mini" >修改</el-button >
+                            <el-button type="text" size="mini" @click="editHandle(scope)">修改</el-button >
                             <el-button type="text" size="mini" @click="deleteHandle(scope)">删除</el-button >
                         </template>
                     </el-table-column>
@@ -83,8 +83,8 @@
 </template>
 
 <script>
-import { reactive, ref } from "vue";
-import {getProvince, getCity, getSchoolType, schoolList, deleteSchool } from '../../api/school.js'
+import { reactive, ref, onMounted } from "vue";
+import {getProvince, getCity, getSchoolType, schoolList, deleteSchool, areaList } from '../../api/school.js'
 import { useRouter } from 'vue-router';
 export default {
     name: "logs",
@@ -95,7 +95,8 @@ export default {
                 province: '',
                 city: '',
                 classifyId: '',
-                name: ''
+                name: '',
+                pid: ''
             });
         const loading       = ref(true);
         const provinceList    = ref([])
@@ -104,11 +105,27 @@ export default {
         const tableData     = ref([])
         const pageTotal     = ref(0)
         const listTotal     = ref(0)
-        getProvince().then(res => {
-            console.log('provinceList', res)
-            let {code, data, msg} = res;
-            provinceList.value = data
+        // getProvince().then(res => {
+        //     console.log('provinceList', res)
+        //     let {code, data, msg} = res;
+        //     provinceList.value = data
+        // })
+        onMounted(() => {
+            getAreaList()
         })
+        // 新省市区列表
+        let getAreaList = (pid, type) => {
+            // let data = type ? {id: pid || 0} : {pid: pid || 0}
+            areaList({pid: pid || 0}).then(res => {
+                console.log('areaList', res)
+                let {code, data, msg} = res;
+                if(type) {
+                    cityList.value = data
+                } else {
+                    provinceList.value = data
+                }
+            })
+        }
         // 高校分类
         getSchoolType().then(res => {
             console.log('getSchoolType', res)
@@ -132,6 +149,7 @@ export default {
         }
         return {
             name,
+            router,
             params,
             provinceList,
             cityList,
@@ -139,6 +157,7 @@ export default {
             tableData,
             loading,
             createSchool,
+            getAreaList,
             pageTotal,
             listTotal
         };
@@ -151,9 +170,11 @@ export default {
         search(){
             this.getSchoolList();
         },
-        changeSelector(e, name){
-            console.log('changeSelector', e, name)
-            if(name === 'province') this.getCityList()
+        changeSelector(id, name){
+            console.log('changeSelector', id, name)
+            // if(name === 'province') this.getCityList()
+            if(name === 'province') this.getAreaList(id, name)
+
         },
         changeCurrent(page){
             console.log('changeCurrent', page)
@@ -175,13 +196,13 @@ export default {
             })
         },
         // 市区列表
-        getCityList() {
-            getCity(this.params.province).then(res => {
-                console.log('getCityList', res)
-                let {code, data, msg} = res;
-                this.cityList = data
-            })
-        },
+        // getCityList() {
+        //     getCity(this.params.province).then(res => {
+        //         console.log('getCityList', res)
+        //         let {code, data, msg} = res;
+        //         this.cityList = data
+        //     })
+        // },
         // 删除
         deleteHandle(scope) {
             let {$index, row} = scope
@@ -201,6 +222,10 @@ export default {
             }).catch(() => {
                 this.$message({ type: 'info', message: '已取消删除' });
             });
+        },
+        editHandle(scope) {
+            let {$index, row} = scope
+            this.router.push(`/schoolManage/detail?id=${scope.id}`)
         }
     }
 };

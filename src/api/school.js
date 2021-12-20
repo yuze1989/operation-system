@@ -11,6 +11,16 @@ export const getProvince = query => {
     })
 }
 
+// 新获取省市区
+export const areaList = query => {
+    return request({
+        url: `/sys/common/areaList?pid=${query.pid}`,
+        method: 'get',
+        // data: query,
+        isLogin: true
+    })
+}
+
 // 市区列表
 // /sys/university/city/{provinceId}
 export const getCity = query => {
@@ -65,7 +75,8 @@ export const deleteSchool = id => {
     })
 }
 
-// 高校分类
+// 高校分类模块
+// 列表
 export const schoolCategory = query => {
     return request({
         url: '/sys/dict/list',

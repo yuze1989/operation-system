@@ -50,7 +50,7 @@
                     </el-table-column>
                     <el-table-column label="操作">
                         <template class="template" v-slot="scope">
-                            <el-button type="text" @click="editMenu(scope)">修改</el-button>
+                            <!-- <el-button type="text" @click="editMenu(scope)">修改</el-button> -->
                             <el-button type="text" @click="deleteMenu(scope)">删除</el-button>
                         </template>
                     </el-table-column>
@@ -70,7 +70,7 @@
 <script>
 import { onActivated, onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-import { getMenuList, deleteMenu } from '@/api/exam'
+import { getMenuList, deleteMenu, firstMenuList } from '@/api/exam'
 export default {
     name: "sideConfigure",
     setup() {
@@ -98,7 +98,8 @@ export default {
         
         onActivated(() => {
             console.log('onActivated')
-            menuLists(params.type)
+            // menuLists(params.type)
+            getFirstMenuList()
         })
 
         let menuLists = (type) => {
@@ -128,6 +129,12 @@ export default {
                 tableData.value = records
                 pageTotal.value = pages
                 listTotal.value = total
+            })
+        }
+        // 获取一级菜单列表
+        let getFirstMenuList = (type) => {
+            firstMenuList({type: type || 0}).then(res => {
+                console.log('object', res)
             })
         }
 

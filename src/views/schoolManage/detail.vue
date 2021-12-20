@@ -154,6 +154,7 @@ export default {
             schoolType.value = data
         })
         onMounted(() => {
+            let query = router.currentRoute.value.query
             getAreaList()
         })
         // 新省市区列表

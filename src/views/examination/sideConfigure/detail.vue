@@ -35,12 +35,10 @@
                 </div>
             </el-col>
         </el-row>
-        <vue-core-image-upload></vue-core-image-upload>
     </div>
 </template>
 
 <script>
-import VueCoreImageUpload  from 'vue-core-image-upload'
 import { onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { createMenu, createBatchMenu, menuDetail } from '@/api/exam'
@@ -72,9 +70,6 @@ export default {
             typeLists,
             selectType
         }
-    },
-    components: {
-        'vue-core-image-upload': VueCoreImageUpload
     },
     methods: {
         addSecondMenu(e) {
