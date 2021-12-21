@@ -83,7 +83,8 @@ export default {
             copyright: '',
             imgs: [],
             price: 0,
-            questionId: ''
+            questionId: '',
+            id:''
         })
 
         let subject = reactive({})
@@ -110,11 +111,13 @@ export default {
                 copyright: '',
                 imgs: [],
                 price: 0,
-                questionId: ''
+                questionId: '',
+                id: ''
             } 
         })
         // 获取详情
         let getPaperDetail = (id) => {
+            params.id = id;
             paperDetail(id).then(res => {
                 console.log('高分试卷详情', res)
                 let {code, data, msg} = res,
@@ -188,13 +191,13 @@ export default {
         },
         // 保存
         savePaper() {
-            let {copyright, questionId, price, imgs} = this
+            let {copyright, questionId, price, imgs, id} = this
             console.log('copyright, questionId, price', copyright, questionId, price, imgs)
             updatePaper({
                 copyright,
                 description: imgs[0]['description'],
                 hdImg: imgs[0]['hdImg'],
-                id: questionId,
+                id,
                 price
             }).then(res => {
                 console.log(res)

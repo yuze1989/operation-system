@@ -19,7 +19,7 @@
                         </el-col>
                         <el-col :span="5" :offset="2">
                             机构名称：
-                            <el-input v-model="params.name" data-name="secondMenu" @input="changeValue" placeholder="请输入内容" ></el-input>
+                            <el-input v-model="params.schoolName" data-name="secondMenu" @input="changeValue" placeholder="请输入内容" ></el-input>
                         </el-col>
                     </el-row>
                     <el-row>
@@ -40,13 +40,13 @@
                     <el-row>
                         <el-col :span="5" :offset="6">
                             审核状态：
-                            <el-select v-model="params.status" clearable
+                            <el-select v-model="params.auditStatus" clearable
                                 name="type" @change="changeSelector($event)" placeholder="请选择状态">
                                 <el-option
-                                    v-for="(type, index) in statusData"
+                                    v-for="(item, index) in statusData"
                                     :key="index"
-                                    :label="type"
-                                    :value="type">
+                                    :label="item.name"
+                                    :value="item.type">
                                 </el-option>
                             </el-select>
                         </el-col>
@@ -83,7 +83,7 @@
                     <el-table-column prop="auditStatus" width="100" label="审核状态">
                         <template class="template" v-slot="scope">
                             <!-- 审核状态 0-未审核 1-通过 2-不通过 -->
-                            {{statusData[scope.row.auditStatus]}}
+                            {{statusData[scope.row.auditStatus]['name']}}
                         </template>
                     </el-table-column>
                     <el-table-column label="操作">
@@ -116,14 +116,14 @@ export default {
     setup() {
         let name   = localStorage.getItem("ms_username");
         let router = useRouter();
-        let statusData = ref(['未审核', '通过', '不通过']) ;  // 审核状态 0-未审核 1-通过 2-不通过
+        let statusData = ref([{type:0, name: '未审核'},{type: 1,name: '通过'}, {type: 2, name: '不通过'}]) ;  // 审核状态 0-未审核 1-通过 2-不通过
         let examType   = ref([{type: '0', name: '模考'}, {type: '1', name: '高考'}]); // 考试类型 0-模考 1-高考
         let params = reactive({
-            name: '',           // 机构名称
+            schoolName: '',           // 机构名称
             type: '',           // 考试类型
             year: '',           // 考题年份
             firstMenuName: '',  // 主办方归属
-            status: ''          // 审核状态
+            auditStatus: ''          // 审核状态
         })
         let loading       = ref(true);
         let tableData     = ref([])
