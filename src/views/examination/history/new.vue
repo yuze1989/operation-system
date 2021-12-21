@@ -139,7 +139,7 @@
                                     <div class="img" v-for="(itl, i) in item['imgs']" :key="i">
                                         <img :src="itl.hdImg" @click="previewImg(itl)" alt="">
                                         <span class="delete-icon" @click="removeHdImg(index, i)">x</span>
-                                        <el-input type="text" placeholder="描述" v-model="itl.description"></el-input>
+                                        <!-- <el-input type="text" placeholder="描述" v-model="itl.description"></el-input> -->
                                     </div>
                                     <el-upload
                                         action="https://test-ykh.msjsol.com/sys/file/imageUpload"                                    

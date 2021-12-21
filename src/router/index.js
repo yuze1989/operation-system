@@ -207,6 +207,14 @@ const routes = [
                 component: () => import ( /* webpackChunkName: "logs" */ "../views/examination/highScorePaper/new.vue")
             },
             {
+                path: "/examination/highScorePaper/detail",
+                name: "detailHighScorePaper",
+                meta: {
+                    title: '修改高分试卷'
+                },
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/examination/highScorePaper/detail.vue")
+            },
+            {
                 path: "/examination/highScorePaper/examine",
                 name: "examineHighScorePaper",
                 meta: {

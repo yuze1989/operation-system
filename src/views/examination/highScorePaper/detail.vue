@@ -7,41 +7,25 @@
                     <el-row :gutter="20">
                         <el-col :span="10" :offset="8">
                             考试科目：
-                            <el-select v-model="examId" clearable
-                                @change="changeSelector($event, 'subject')" placeholder="请选择考试科目">
-                                <el-option
-                                    v-for="(item, index) in subjectList"
-                                    :key="index"
-                                    :label="item.subjectName"
-                                    :value="item.subjectId">
-                                </el-option>
-                            </el-select>
+                            <el-input type="text" disabled v-model="subject.name"></el-input>
                         </el-col>
                     </el-row>
                     <el-row :gutter="20">
                         <el-col :span="10" :offset="8">
                             考试题目：
-                            <el-select v-model="questionId" clearable
-                                name="type" @change="changeSelector($event)" placeholder="请选择考题类型">
-                                <el-option
-                                    v-for="(item, index) in problems"
-                                    :key="index"
-                                    :label="item.content"
-                                    :value="item.id">
-                                </el-option>
-                            </el-select>
+                            <el-input type="text" disabled  v-model="question.content"></el-input>
                         </el-col>
                     </el-row>
                     <el-row :gutter="20">
                         <el-col :span="10" :offset="8">
                             每张试卷价格：
-                            <el-input type="text" v-model="params.price" placeholder="每张试卷价格"></el-input>
+                            <el-input type="text" v-model="price" placeholder="每张试卷价格"></el-input>
                         </el-col>
                     </el-row>
                     <el-row :gutter="20">
                         <el-col :span="10" :offset="8">
                             版权信息：
-                            <el-input type="text" v-model="params.copyright" placeholder="版权信息"></el-input>
+                            <el-input type="text" v-model="copyright" placeholder="版权信息"></el-input>
                         </el-col>
                     </el-row>
                     <el-row :gutter="20">
@@ -49,12 +33,12 @@
                             试卷图片：
                             <div class="item-img-box">
                                 <div class="file-list">
-                                    <div class="img" v-for="(itl, i) in params.imgs" :key="i">
+                                    <div class="img" v-for="(itl, i) in imgs" :key="i">
                                         <img :src="itl.hdImg" @click="previewImg(itl)" alt="">
                                         <span class="delete-icon" @click="removeHdImg(i)">x</span>
                                         <el-input type="text" placeholder="描述" v-model="itl.description"></el-input>
                                     </div>
-                                    <el-upload
+                                    <el-upload v-show="!imgs.length"
                                         action="https://test-ykh.msjsol.com/sys/file/imageUpload"                                    
                                         :headers="header" multiple :limit="limitPictureNumber"
                                         list-type="picture-card"
@@ -80,67 +64,70 @@
 </template>
 
 <script>
-import { onBeforeUnmount, onMounted, reactive, ref, toRefs } from "vue";
+import { onActivated, onBeforeUnmount, onMounted, reactive, ref, toRefs } from "vue";
 import { useRouter } from "vue-router";
-import {createPaper, getSubjectSelectors, questionList, paperDetail} from '@/api/exam'
+import {updatePaper, paperDetail} from '@/api/exam'
 export default {
-    name: "newpaper",
+    name: "detailHighScorePaper",
     setup() {
         let name   = localStorage.getItem("ms_username");
         let router = useRouter();
         let token   = localStorage.getItem("token");
-        let header = ref({
-            SYS_TOKEN: token
-        })
-        let limitPictureNumber = ref(50)
+        let header = ref({ SYS_TOKEN: token })
+        let limitPictureNumber = ref(1)
+        // "description": "图片描述",
+        // "hdImg": "https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png"
         let params = reactive({
+            subject: {},
+            question: {},
             copyright: '',
             imgs: [],
-            // "description": "图片描述",
-            // "hdImg": "https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png"
             price: 0,
             questionId: ''
         })
-        let examId = ref('')
-        let questionId = ref('')
-        let subjectList = ref([])
-        let problems = ref([])
+
+        let subject = reactive({})
+        let question = reactive({})
+
         let dialog = reactive({
             dialogImageUrl: '',
             dialogVisible: false,
             disabled: false
         })
         onMounted(() => {
-            let query = router.currentRoute.value.query,
-                { id, pid } = query
-            if(id) {
-                questions(query.id)
-            } else if(pid) {
-                getPaperDetail(pid)
-            }
+            let query = router.currentRoute.value.query;
+            getPaperDetail(query.pid)
+        })
+        onActivated(() => {
+            let query = router.currentRoute.value.query;
+            getPaperDetail(query.pid)
         })
         onBeforeUnmount(() => {
             console.log('onBeforeUnmount')
             params = {
+                subject: {},
+                question: {},
                 copyright: '',
                 imgs: [],
                 price: 0,
                 questionId: ''
             } 
         })
-        let questions = (id) => {
-            questionList(id).then(res => {
-                console.log(res)
-                let {code, data, msg} = res
-                if(code === 200) {
-                    subjectList.value = data.subjects
-                }
-            })
-        }
         // 获取详情
         let getPaperDetail = (id) => {
             paperDetail(id).then(res => {
-                console.log(res)
+                console.log('高分试卷详情', res)
+                let {code, data, msg} = res,
+                    {subject, question, paperImg} = data;
+                params.subject = subject
+                params.question = question
+                params.copyright = paperImg.copyright
+                params.price = paperImg.price
+                params.questionId = paperImg.questionId
+                params.imgs = [{
+                    hdImg: paperImg.hdImg,
+                    description: paperImg.description
+                }]
             })
         }
 
@@ -149,37 +136,17 @@ export default {
             router,
             header,
             params,
-            examId,
-            subjectList,
-            problems,
-            questionId,
+            subject,
+            question,
+            getPaperDetail,
             limitPictureNumber,
-            ...toRefs(dialog)
+            ...toRefs(dialog),
+            ...toRefs(params),
         };
     },
     methods: {
         changeValue(e) {
             console.log('changevalue', this.params) 
-        },
-        changeSelector(e, name) {
-            let subject = this.subjectList
-            console.log(e)
-            // this.examId = e;
-            console.log('changeSelector', this.params)
-            if(name === 'subject'){
-                subject.forEach((item, index) => {
-                    if(item.subjectId == e) {
-                        this.problems = item.questions
-                    }
-                })
-            }
-        },
-        // questionId
-        getQuestionList() {
-            console.log(this.examId)
-            questionList(this.examId).then(res => {
-                console.log(res)
-            })
         },
         //预览图片
         previewImg(file) {
@@ -221,21 +188,25 @@ export default {
         },
         // 保存
         savePaper() {
-            console.log(this.params)
-            createPaper({
-                ...this.params,
-                questionId: this.questionId
+            let {copyright, questionId, price, imgs} = this
+            console.log('copyright, questionId, price', copyright, questionId, price, imgs)
+            updatePaper({
+                copyright,
+                description: imgs[0]['description'],
+                hdImg: imgs[0]['hdImg'],
+                id: questionId,
+                price
             }).then(res => {
                 console.log(res)
                 let {code} = res
                 if(code === 200) {
-                    this.$message({ type: 'success', message: '添加成功!' });
+                    this.$message({ type: 'success', message: '修改成功!' });
                     this.router.push('/examination/highScorePaper');
                 } 
             })
         }
     }
-};
+}
 </script>
 
 <style>

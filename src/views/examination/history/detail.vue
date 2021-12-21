@@ -136,9 +136,10 @@
                         <el-col :span="20">
                             <div class="item-img-box">
                                 <div class="file-list">
-                                    <div class="img" v-for="(item, index) in item['imgs']" :key="index">
-                                        <img :src="item.hdImg" @click="previewImg(item)" alt="">
-                                        <el-input type="text" placeholder="描述" v-model="item.description"></el-input>
+                                    <div class="img" v-for="(itl, i) in item['imgs']" :key="i">
+                                        <img :src="itl.hdImg" @click="previewImg(itl)" alt="">
+                                        <span class="delete-icon" @click="removeHdImg(index, i)">x</span>
+                                        <!-- <el-input type="text" placeholder="描述" v-model="itl.description"></el-input> -->
                                     </div>
                                     <el-upload
                                         action="https://test-ykh.msjsol.com/sys/file/imageUpload"                                    
@@ -206,7 +207,7 @@
 <script>
 import { onMounted, reactive, ref, toRefs } from "vue";
 import { useRouter } from "vue-router";
-import { getSponsorList, getSubjectSelectors, historyExamDetail, createHistoryExam } from '@/api/exam'
+import { getSponsorList, getSubjectSelectors, historyExamDetail, createHistoryExam, updateHistoryExam } from '@/api/exam'
 export default {
     name: "newHistory",
     setup() {
@@ -228,48 +229,50 @@ export default {
         let fileList = ref([])
         let limitPictureNumber = ref(50)
         let pictureList = ref([])
-        let params = reactive({
-            parent: '',
-            children: '',
-            year: '',
-            type: '', 
-            specialty: '', //专业
-            name: ''       //考试名称
+        let dataObject = reactive({
+            params: {
+                parent: '',
+                children: '',
+                year: '',
+                type: '', 
+                specialty: '', //专业
+                name: ''       //考试名称
+            },
+            subjectData: [{
+                subjectId: '',
+                title: '',
+                examDate: '',
+                content: '',
+                imgs: [],
+                remarks: ''
+            }]
         })
         
         let parentMenus = ref([])
         let childrenMenus = ref([])
         let subjectSelectors = ref([])
-
-        let subjectData = reactive([{
-            subjectId: '',
-            title: '',
-            examDate: '',
-            content: '',
-            imgs: [],
-            remarks: ''
-        }])
         onMounted(() => {
             let query = router.currentRoute.value.query
             getExamDetail(query.id)
         })
         let getExamDetail = (id) => {
             historyExamDetail(id).then(res => {
+                console.log('历年考题详情', res)
                 if(res.code === 200) {
-                    let {name, menuId, specialty, type, year} =  res.data
-                    params = {
-                        id: res.data.id,
-                        parent: id,
-                        children: menuId,
-                        specialty,
-                        type,
-                        name, 
-                        year
-                    }
+                    let {name, firstMenuId, menuId, specialty, type, year, questions, id} =  res.data
                     getTagList(type)
-                    getTagList(type, menuId)
+                    getTagList(type, firstMenuId)
+                    dataObject.params = {
+                        id,
+                        parent: String(firstMenuId),
+                        children: String(menuId),
+                        specialty,
+                        type: String(type),
+                        name, 
+                        year: String(year)
+                    }
+                    dataObject.subjectData = questions
                 }
-                console.log(params)
             })
         }
 
@@ -280,11 +283,12 @@ export default {
                 parentId: parentId || 0
             }).then(res => {
                 let {code, data, msg} = res
-                if(type && !parentId) {
-                    parentMenus.value = data
-                } else if(type && parentId) {
+                if(parentId) {
                     childrenMenus.value = data
+                } else {
+                    parentMenus.value = data
                 }
+                console.log(parentMenus, childrenMenus)
             })
         }
 
@@ -299,8 +303,6 @@ export default {
             name,
             header,
             router,
-            params,
-            subjectData,
             typeList,
             parentMenus,
             childrenMenus,
@@ -309,6 +311,7 @@ export default {
             limitPictureNumber,
             getExamDetail,
             getTagList,
+            ...toRefs(dataObject),
             ...toRefs(dialog)
         };
     },
@@ -347,6 +350,13 @@ export default {
             this.dialogImageUrl = file.hdImg;
             this.dialogVisible = true;
         },
+        // 删除图片
+        // 自定义删除图片
+        removeHdImg(index, i) {
+            console.log('object', index, i)
+            this.subjectData[index]['imgs'].splice(i, 1)
+            console.log(this.subjectData)
+        },
         //预览图片
         handlePictureCardPreview(file) {
             console.log(file)
@@ -362,7 +372,7 @@ export default {
                 // url: response.data,
                 description: '',
                 hdImg: response.data,
-                id: file.uid
+                id: ''
             })
             console.log('this.pictureList', this.subjectData)
         },
@@ -390,11 +400,12 @@ export default {
         save(){
             console.log(this.params)
             console.log(this.subjectData)
-            let { parent, children, year, type, specialty, name } = this.params
+            let { parent, children, year, type, specialty, name, id } = this.params
             let imgs = this.subjectData[0]['imgs']
             let data = {
                 menuId: children, 
-                id: parent, 
+                firstMenuId: parent, 
+                id: this.params.id,
                 year, 
                 type, 
                 specialty, 
@@ -402,12 +413,12 @@ export default {
                 questions: this.subjectData
             }
             console.log(data)
-            createHistoryExam(data).then(res => {
+            updateHistoryExam(data).then(res => {
                 console.log(res)
                 let {code} = res
                 if(code === 200) {
-                    this.$message({ type: 'success', message: '添加成功!' });
-                    this.router.push('/examination/history/');
+                    this.$message({ type: 'success', message: '编辑成功!' });
+                    this.router.push('/examination/history');
                 }
             })
         }
@@ -489,10 +500,26 @@ export default {
     flex-wrap: wrap
 }
 .item-img-box .file-list .img{
+    position: relative;
     padding: 5px;
     box-sizing: border-box;
     width: 164px;
     border-radius: 5px;
+}
+
+.item-img-box .file-list .img .delete-icon{
+    display: inline-block;
+    vertical-align: middle;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    border-radius: 50%;
+    background: #FFFFFF;
+    cursor: pointer;
+    z-index: 999;
 }
 .item-img-box .file-list .img img{
     width: 100%;

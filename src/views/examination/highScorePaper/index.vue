@@ -111,7 +111,7 @@
                     </el-table-column>
                     <el-table-column label="操作">
                         <template class="template" v-slot="scope">
-                            <!-- <el-button type="text" size="mini" @click="editHandle(scope)">修改</el-button> -->
+                            <el-button type="text" size="mini" @click="editHandle(scope)">修改</el-button>
                             <el-button type="text" size="mini" @click="deletePaperHandle(scope)">删除</el-button>
                             <el-button type="text" size="mini" @click="auditHandle(scope)">审核</el-button>
                         </template>
@@ -202,7 +202,9 @@ export default {
     methods: {
         changeCurrent(page){
             console.log('changeCurrent', page)
-            this.getPaperList(page)
+            this.params.current = page
+            console.log(this.params)
+            this.getPaperList()
         },
         changeValue(e) {
             console.log('changevalue', this.params) 
@@ -211,20 +213,20 @@ export default {
             console.log(e)
             console.log('changeSelector', this.params)
         },
-        getPaperList(page) {
-            this.loading = true;
-            paperList({
-                ...this.params,
-                current: page || 1
-            }).then(res => {
-                this.loading = false
-                console.log('getSubjectList', res)
-                let {pages, records, total} = res.data
-                this.tableData = records
-                this.pageTotal = pages
-                this.listTotal = total
-            })
-        },
+        // getPaperList(page) {
+        //     this.loading = true;
+        //     paperList({
+        //         ...this.params,
+        //         current: page || 1
+        //     }).then(res => {
+        //         this.loading = false
+        //         console.log('getSubjectList', res)
+        //         let {pages, records, total} = res.data
+        //         this.tableData = records
+        //         this.pageTotal = pages
+        //         this.listTotal = total
+        //     })
+        // },
         // 查询
         searchPaper(){
             this.getPaperList()
@@ -322,7 +324,7 @@ export default {
         // 编辑
         editHandle(scope) {
             let {$index, row} = scope
-            this.createHighPaper(row.id)
+            this.router.push({path: '/examination/highScorePaper/detail', query: {pid: row.id}})
         }
     }
 };

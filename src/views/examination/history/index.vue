@@ -88,7 +88,7 @@
                     </el-table-column>
                     <el-table-column label="操作">
                         <template class="template" v-slot="scope">
-                            <!-- <el-button type="text" size="mini" @click="editExam(scope)">修改</el-button> -->
+                            <el-button type="text" size="mini" @click="editExam(scope)">修改</el-button>
                             <el-button type="text" size="mini" @click="deleteExam(scope)">删除</el-button>
                             <el-button type="text" size="mini" @click="reviewExam(scope)">审核</el-button>
                             <el-button type="text" size="mini" @click="createPaper(scope)">新增高分试卷</el-button>
@@ -195,7 +195,7 @@ export default {
             this.loading = true;
             getHistoryList({
                 ...this.params,
-                page,
+                current: page,
                 size: 10
             }).then(res => {
                 this.loading = false

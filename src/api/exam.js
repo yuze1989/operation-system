@@ -191,12 +191,21 @@ export const deleteHistoryExam = query => {
     })
 }
 
-// 审核
+// 历年考题批量审核
 export const updateAuditStatus = query => {
     return request({
         url: '/sys/history-exam-v2/updateAuditStatus',
         method: 'post',
         data: query, 
+        isLogin: true
+    })
+}
+//历年考题编辑更新
+export const updateHistoryExam = query => {
+    return request({
+        url: '/sys/history-exam-v2/update',
+        method: 'post',
+        data: query,
         isLogin: true
     })
 }
@@ -285,6 +294,16 @@ export const paperDetail = id => {
     return request({
         url: `/sys/history-paper-v2/detail/${id}`,
         method: 'get',
+        isLogin: true
+    })
+}
+
+// 高分试卷编辑/更新
+export const updatePaper = query => {
+    return request({
+        url: '/sys/history-paper-v2/update',
+        method: 'post',
+        data: query,
         isLogin: true
     })
 }
