@@ -115,7 +115,7 @@
 </template>
 
 <script>
-import { reactive, ref, toRefs, onMounted } from "vue";
+import { reactive, ref, toRefs, onMounted, onActivated } from "vue";
 import { useRouter } from 'vue-router';
 import { getCity, getSchoolType, createSchool, areaList } from '../../api/school.js'
 export default {
@@ -154,6 +154,10 @@ export default {
             schoolType.value = data
         })
         onMounted(() => {
+            let query = router.currentRoute.value.query
+            getAreaList()
+        })
+        onActivated(() => {
             let query = router.currentRoute.value.query
             getAreaList()
         })

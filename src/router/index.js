@@ -255,6 +255,14 @@ const routes = [
                 component: () => import ( /* webpackChunkName: "logs" */ "../views/schoolManage/new.vue")
             },
             {
+                path: "/schoolManage/detail",
+                name: "editSchoolManage",
+                meta: {
+                    title: '修改高校'
+                },
+                component: () => import ( /* webpackChunkName: "logs" */ "../views/schoolManage/detail.vue")
+            },
+            {
                 path: "/schoolManage/category",
                 name: "SchoolCategory",
                 meta: {

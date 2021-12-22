@@ -26,7 +26,7 @@
                                 <el-option
                                     v-for="(item, index) in problems"
                                     :key="index"
-                                    :label="item.content"
+                                    :label="item.title"
                                     :value="item.id">
                                 </el-option>
                             </el-select>
@@ -188,9 +188,8 @@ export default {
             this.dialogVisible = true;
         },
         // 自定义删除图片
-        removeHdImg(index, i) {
-            console.log('object', index, i)
-            this.params.imgs.splice(i, 1)
+        removeHdImg(index) {
+            this.params.imgs.splice(index, 1)
             console.log(this.params.imgs)
         },
         // 图片上传成功
@@ -330,7 +329,7 @@ export default {
     position: absolute;
     top: 0;
     right: 0;
-    transform: translate(25%, -25%);
+    /* transform: translate(50%, -25%); */
     width: 20px;
     height: 20px;
     text-align: center;
@@ -343,6 +342,7 @@ export default {
     width: 100%;
 }
 .item-img-box .file-list .img img{
+    margin-top: 10px;
     width: 100%;
     height: 146px;
     border-radius: 5px;

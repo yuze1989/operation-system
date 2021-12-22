@@ -177,6 +177,17 @@
     estree-walker "^2.0.1"
     source-map "^0.6.1"
 
+"@vue/compiler-core@3.2.0":
+  version "3.2.0"
+  resolved "https://registry.npmmirror.com/@vue/compiler-core/download/@vue/compiler-core-3.2.0.tgz#cd06283615dfb228b5e6f2aabcf30dadc0f9dfe5"
+  integrity sha1-zQYoNhXfsii15vKqvPMNrcD53+U=
+  dependencies:
+    "@babel/parser" "^7.12.0"
+    "@babel/types" "^7.12.0"
+    "@vue/shared" "3.2.0"
+    estree-walker "^2.0.1"
+    source-map "^0.6.1"
+
 "@vue/compiler-dom@3.1.2":
   version "3.1.2"
   resolved "https://registry.npmmirror.com/@vue/compiler-dom/download/@vue/compiler-dom-3.1.2.tgz#75a7731bcc5d9718183a3c56c18e992f7c13e7b1"
@@ -184,6 +195,14 @@
   dependencies:
     "@vue/compiler-core" "3.1.2"
     "@vue/shared" "3.1.2"
+
+"@vue/compiler-dom@3.2.0":
+  version "3.2.0"
+  resolved "https://registry.npmmirror.com/@vue/compiler-dom/download/@vue/compiler-dom-3.2.0.tgz#91bc35afddbd634b186e6da4c594f5705f68d6bb"
+  integrity sha1-kbw1r929Y0sYbm2kxZT1cF9o1rs=
+  dependencies:
+    "@vue/compiler-core" "3.2.0"
+    "@vue/shared" "3.2.0"
 
 "@vue/compiler-sfc@3.1.2":
   version "3.1.2"
@@ -221,34 +240,39 @@
   resolved "https://registry.yarnpkg.com/@vue/devtools-api/-/devtools-api-6.0.0-beta.20.1.tgz#5b499647e929c35baf2a66a399578f9aa4601142"
   integrity sha512-R2rfiRY+kZugzWh9ZyITaovx+jpU4vgivAEAiz80kvh3yviiTU3CBuGuyWpSwGz9/C7TkSWVM/FtQRGlZ16n8Q==
 
-"@vue/reactivity@3.1.2":
-  version "3.1.2"
-  resolved "https://registry.npmmirror.com/@vue/reactivity/download/@vue/reactivity-3.1.2.tgz#66fa530dd726d2fef285ae55d02106a727db463b"
-  integrity sha1-ZvpTDdcm0v7yha5V0CEGpyfbRjs=
+"@vue/reactivity@3.2.0":
+  version "3.2.0"
+  resolved "https://registry.npmmirror.com/@vue/reactivity/download/@vue/reactivity-3.2.0.tgz#4e2e6d71312ba4d7505b8faf9c9599ddc030e346"
+  integrity sha1-Ti5tcTErpNdQW4+vnJWZ3cAw40Y=
   dependencies:
-    "@vue/shared" "3.1.2"
+    "@vue/shared" "3.2.0"
 
-"@vue/runtime-core@3.1.2":
-  version "3.1.2"
-  resolved "https://registry.npmmirror.com/@vue/runtime-core/download/@vue/runtime-core-3.1.2.tgz#f4dbc503cfc9a02ab5f1ebe002c3322512064a54"
-  integrity sha1-9NvFA8/JoCq18evgAsMyJRIGSlQ=
+"@vue/runtime-core@3.2.0":
+  version "3.2.0"
+  resolved "https://registry.npmmirror.com/@vue/runtime-core/download/@vue/runtime-core-3.2.0.tgz#490b5639a2e8a0b6c5cb491aa710a441fad994c3"
+  integrity sha1-SQtWOaLooLbFy0kapxCkQfrZlMM=
   dependencies:
-    "@vue/reactivity" "3.1.2"
-    "@vue/shared" "3.1.2"
+    "@vue/reactivity" "3.2.0"
+    "@vue/shared" "3.2.0"
 
-"@vue/runtime-dom@3.1.2":
-  version "3.1.2"
-  resolved "https://registry.npmmirror.com/@vue/runtime-dom/download/@vue/runtime-dom-3.1.2.tgz#0fd8724f14bc7ba64b6c954d874a8d8a4fcb5fe9"
-  integrity sha1-D9hyTxS8e6ZLbJVNh0qNik/LX+k=
+"@vue/runtime-dom@3.2.0":
+  version "3.2.0"
+  resolved "https://registry.npmmirror.com/@vue/runtime-dom/download/@vue/runtime-dom-3.2.0.tgz#d4866acf79a0b6c43d3bdca057b2f42cd5dbc32f"
+  integrity sha1-1IZqz3mgtsQ9O9ygV7L0LNXbwy8=
   dependencies:
-    "@vue/runtime-core" "3.1.2"
-    "@vue/shared" "3.1.2"
+    "@vue/runtime-core" "3.2.0"
+    "@vue/shared" "3.2.0"
     csstype "^2.6.8"
 
 "@vue/shared@3.1.2":
   version "3.1.2"
   resolved "https://registry.npmmirror.com/@vue/shared/download/@vue/shared-3.1.2.tgz#1069c0bc7d6f4bd15ccf3a5f3be29450aca368f9"
   integrity sha1-EGnAvH1vS9FczzpfO+KUUKyjaPk=
+
+"@vue/shared@3.2.0":
+  version "3.2.0"
+  resolved "https://registry.npmmirror.com/@vue/shared/download/@vue/shared-3.2.0.tgz#f24386a54ca7e43da83ae3695be5ca92f2f946e0"
+  integrity sha1-8kOGpUyn5D2oOuNpW+XKkvL5RuA=
 
 "@wangeditor/basic-modules@^0.9.0":
   version "0.9.0"
@@ -654,7 +678,7 @@ lodash.toarray@^4.4.0:
   resolved "https://registry.npm.taobao.org/lodash.toarray/download/lodash.toarray-4.4.0.tgz#24c4bfcd6b2fba38bfd0594db1179d8e9b656561"
   integrity sha1-JMS/zWsvuji/0FlNsRedjptlZWE=
 
-lodash@^4.17.20:
+lodash@^4.17.20, lodash@^4.17.21:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -967,14 +991,14 @@ vue-schart@^2.0.0:
   dependencies:
     schart.js "^3.0.0"
 
-vue@3.1.2:
-  version "3.1.2"
-  resolved "https://registry.npmmirror.com/vue/download/vue-3.1.2.tgz#647f8e3949a3d600771dca25d50225dc3e594c64"
-  integrity sha512-q/rbKpb7aofax4ugqu2k/uj7BYuNPcd6Z5/qJtfkJQsE0NkwVoCyeSh7IZGH61hChwYn3CEkh4bHolvUPxlQ+w==
+vue@3.2.0:
+  version "3.2.0"
+  resolved "https://registry.npmmirror.com/vue/download/vue-3.2.0.tgz#81306934369446b46d1aaed9a9a986b79afdba96"
+  integrity sha512-eMo5yCdkWRmBfqp/acBI/Y1Omgk0NyGqPViaU66eOpKarXNtkdImzDA57+E76jnWVr6MEp/rg1n0vnxaVvALMQ==
   dependencies:
-    "@vue/compiler-dom" "3.1.2"
-    "@vue/runtime-dom" "3.1.2"
-    "@vue/shared" "3.1.2"
+    "@vue/compiler-dom" "3.2.0"
+    "@vue/runtime-dom" "3.2.0"
+    "@vue/shared" "3.2.0"
 
 vuex@^4.0.2:
   version "4.0.2"

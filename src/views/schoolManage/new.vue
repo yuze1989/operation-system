@@ -81,9 +81,9 @@
                         <el-col :span="4" :offset="4">
                             高校简介：
                         </el-col>
-                        <el-col :span="10">
+                        <el-col :span="16">
                             <!-- <el-input type="textarea" v-model="params.description" @input="changeValue" :autosize="{ minRows: 4}" placeholder="请输入内容" ></el-input> -->
-                            <!-- <Editor></Editor> -->
+                            <Editor @getEditorContent="getContent"></Editor>
                         </el-col>
                     </el-row>
                     <el-row>
@@ -109,7 +109,7 @@
                             app展示位置：
                         </el-col>
                         <el-col :span="10">
-                            <el-input v-model="params.ranking" @input="changeValue" placeholder="请输入内容" ></el-input>
+                            <el-input v-model="params.ranking" clearable @input="changeValue($event, 'rank')" placeholder="请输入内容" ></el-input>
                         </el-col>
                     </el-row>
                     <el-row type="flex" justify="center">
@@ -127,10 +127,10 @@
 import { reactive, ref, toRefs, onMounted, computed, onBeforeUnmount } from "vue";
 import { useRouter } from 'vue-router';
 import { getCity, getSchoolType, createSchool, areaList } from '../../api/school.js'
-// import Editor from '@/components/MyEditor.vue'
+import Editor from '@/components/MyEditor.vue'
 export default {
     name: "logs",
-    // components: {Editor},
+    components: {Editor},
     setup() {
         let name   = localStorage.getItem("ms_username");
         let token   = localStorage.getItem("token");
@@ -149,7 +149,8 @@ export default {
                 name: '',
                 provinceId: '',
                 cityId: '',
-                ranking: 9999
+                ranking: 9999,
+                // jsonData: []
             });
         const loading       = ref(true);
         const limitPictureNumber = ref(1);
@@ -160,12 +161,11 @@ export default {
         const fileList = ref(false)
 
         getSchoolType().then(res => {
-            console.log('getSchoolType', res)
             let {code, data, msg} = res;
             schoolType.value = data
         })
         onMounted(() => {
-            getAreaList()
+            // getAreaList()
         })
         // 新省市区列表
         let getAreaList = (pid, type) => {
@@ -196,8 +196,13 @@ export default {
         };
     },
     methods: {
-        changeValue() {
+        changeValue(e, type) {
             console.log('changeValue', this.params)
+            console.log(e, type)
+            if(type == 'rank') {
+                let rg = /\D+/g
+                rg.test(e) && this.$message({type: 'error', message: '排名只能是大于0的数字，请修改'})
+            }
         },
         changeSelector(id, name){
             console.log('changeSelector', id, this.params)
@@ -224,7 +229,10 @@ export default {
         },
         saveHandle() {
             console.log(this.params)
-            createSchool({...this.params, detail: this.params.description}).then(res => {
+            createSchool({
+                ...this.params, 
+                classifyId: this.params.classifyId.join(',')
+            }).then(res => {
                 console.log(res)
                 let {code, msg} = res
                 if(code === 200) {
@@ -232,6 +240,14 @@ export default {
                     this.router.push('/schoolManage')
                 }
             })
+        },
+        // 获取编辑器的内容
+        getContent(content){
+            console.log('getContent', content)
+            let {html, json} = content 
+            console.log(JSON.stringify(json))
+            this.params.detail = html;
+            // this.params.jsonData = json
         }
     }
 };

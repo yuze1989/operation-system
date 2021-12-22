@@ -225,7 +225,8 @@ export default {
         },
         editHandle(scope) {
             let {$index, row} = scope
-            this.router.push(`/schoolManage/detail?id=${scope.id}`)
+            console.log(scope)
+            this.router.push(`/schoolManage/detail?id=${row.id}`)
         }
     }
 };

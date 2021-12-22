@@ -158,9 +158,9 @@ export default {
             this.dialogVisible = true;
         },
         // 自定义删除图片
-        removeHdImg(index, i) {
-            console.log('object', index, i)
-            this.params.imgs.splice(i, 1)
+        removeHdImg(index) {
+            console.log('object', index)
+            this.params.imgs.splice(index, 1)
             console.log(this.params.imgs)
         },
         // 图片上传成功
