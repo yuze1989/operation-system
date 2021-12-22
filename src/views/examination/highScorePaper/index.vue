@@ -5,7 +5,18 @@
                 <div class="title">高分试卷信息</div>
                 <div class="paper-condition">
                     <el-row :gutter="10">
-                        <el-col :span="5" :offset="7">
+                        <el-col :span="5" :offset="2">
+                            考试类型：
+                            <el-select v-model="params.type" clearable placeholder="请选择考试类型">
+                                <el-option
+                                    v-for="(item, index) in examType"
+                                    :key="index"
+                                    :label="item.name"
+                                    :value="item.type">
+                                </el-option>
+                            </el-select>
+                        </el-col>
+                        <el-col :span="5">
                             机构名称：
                             <el-input type="text" v-model="params.schoolName" placeholder="机构名称"></el-input>
                         </el-col>
@@ -27,7 +38,7 @@
                         <el-col  :span="5">
                             考试科目：
                             <el-select v-model="params.subjectId" clearable
-                                @change="changeSelector($event)" placeholder="请选择考题类型">
+                                @change="changeSelector($event)" placeholder="请选择考试科目">
                                 <el-option
                                     v-for="(item, index) in subjectList"
                                     :key="index"
@@ -57,6 +68,7 @@
                     <el-button type="primary" @click="batchAuditStatus">批量审核</el-button>
                     <el-button type="primary" @click="batchAuditPrice">批量修改价格</el-button>
                     <el-button type="primary" @click="bathAuditCopyright">批量修改版权信息</el-button>
+                    <el-button type="primary" @click="bathDelete">批量删除</el-button>
                 </div>
                 <el-table
                     :data="tableData"
@@ -88,7 +100,7 @@
                     <el-table-column prop="schoolName" label="机构名称"></el-table-column>
                     <el-table-column prop="type" label="考试类型">
                         <template v-slot="scope">
-                            {{examType[scope.row.type]}}
+                            {{examType[scope.row.type]['name']}}
                         </template>
                     </el-table-column>
                     <el-table-column prop="firstMenuName" label="主办方归属"></el-table-column>
@@ -132,7 +144,7 @@
 <script>
 import { onActivated, onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-import { paperList, getSubjectSelectors, deletePaper, updateAuditPricePaper, updateAuditCopyrightPaper} from '@/api/exam'
+import { paperList, getSubjectSelectors, deletePaper, updateAuditPricePaper, updateAuditCopyrightPaper, updateDelete} from '@/api/exam'
 export default {
     name: "highScorePaper",
     setup() {
@@ -149,10 +161,11 @@ export default {
             schoolName: '',
             subjectId: '',
             title: '',
-            year: ''
+            year: '',
+            type: ''  //20211222新添加考试类型
         })
 
-        let examType = ref(['模考', '高考']) // 考试类型 0-模考 1-高考 2-top美考 
+        let examType = ref([{type: 0, name: '模考'}, {type: 1, name: '高考'}]) // 考试类型 0-模考 1-高考 2-top美考 
         let auditStatus = ref(['未审核', '通过', '不通过']) // auditStatus	integer($int32) 审核状态 0-未审核 1-通过 2-不通过
         let subjectList   = ref([])
         let loading       = ref(true);
@@ -319,6 +332,30 @@ export default {
                     })
                 }).catch(() => {
                     this.$message({ type: 'info', message: '取消修改' });       
+            });
+        },
+        // 批量删除
+        bathDelete() {
+            console.log('this.multipleSelection', this.multipleSelection)
+            let query = []
+            this.multipleSelection.forEach(item => {
+                query.push(Number(item.id))
+            })
+            console.log(query)
+            query.length && this.$confirm('确定删除?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true
+            }).then(() => {
+                updateDelete({id: query}).then(res => {
+                    if(res?.code === 200) {
+                        this.$message({ type: 'success', message: '删除成功!' });
+                        this.getPaperList()
+                    }
+                })
+            }).catch(() => {
+                this.$message({ type: 'info', message: '已取消删除' });
             });
         },
         // 编辑

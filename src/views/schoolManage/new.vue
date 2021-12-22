@@ -12,20 +12,20 @@
                             <el-input v-model="params.name" @input="changeValue" placeholder="请输入高校名称" ></el-input>
                         </el-col>
                     </el-row>
-                    <el-row>
+                    <!-- <el-row>
                         <el-col :span="4" :offset="4">
                             高校网站地址：
                         </el-col>
                         <el-col :span="10">
                             <el-input v-model="params.url" @input="changeValue" placeholder="请输入高校网址" ></el-input>
                         </el-col>
-                    </el-row>
+                    </el-row> -->
                     <el-row>
                         <el-col :span="4" :offset="4">
                             高校分类：
                         </el-col>
                         <el-col :span="10">
-                            <el-select v-model="params.classifyId" clearable
+                            <el-select v-model="params.classifyId" clearable multiple
                                 name="type" @change="changeSelector($event, 'classifyId')" placeholder="请选择">
                                 <el-option
                                     v-for="(item, index) in schoolType"
@@ -36,7 +36,7 @@
                             </el-select>
                         </el-col>
                     </el-row>
-                    <el-row>
+                    <!-- <el-row>
                         <el-col :span="4" :offset="4">
                             高校地址：
                         </el-col>
@@ -60,13 +60,21 @@
                                 </el-option>
                             </el-select>
                         </el-col>
-                    </el-row>
-                    <el-row>
+                    </el-row> -->
+                    <!-- <el-row>
                         <el-col :span="4" :offset="4">
                             高校详细地址：
                         </el-col>
                         <el-col :span="10">
                             <el-input v-model="params.address" @input="changeValue" placeholder="请输入内容" ></el-input>
+                        </el-col>
+                    </el-row> -->
+                    <el-row>
+                        <el-col :span="4" :offset="4">
+                            一句话简介：
+                        </el-col>
+                        <el-col :span="10">
+                            <el-input type="textarea" v-model="params.description" @input="changeValue" :autosize="{ minRows: 4}" placeholder="请输入内容" ></el-input>
                         </el-col>
                     </el-row>
                     <el-row>
@@ -74,7 +82,8 @@
                             高校简介：
                         </el-col>
                         <el-col :span="10">
-                            <el-input type="textarea" v-model="params.description" @input="changeValue" :autosize="{ minRows: 4}" placeholder="请输入内容" ></el-input>
+                            <!-- <el-input type="textarea" v-model="params.description" @input="changeValue" :autosize="{ minRows: 4}" placeholder="请输入内容" ></el-input> -->
+                            <!-- <Editor></Editor> -->
                         </el-col>
                     </el-row>
                     <el-row>
@@ -115,11 +124,13 @@
 </template>
 
 <script>
-import { reactive, ref, toRefs, onMounted } from "vue";
+import { reactive, ref, toRefs, onMounted, computed, onBeforeUnmount } from "vue";
 import { useRouter } from 'vue-router';
 import { getCity, getSchoolType, createSchool, areaList } from '../../api/school.js'
+// import Editor from '@/components/MyEditor.vue'
 export default {
     name: "logs",
+    // components: {Editor},
     setup() {
         let name   = localStorage.getItem("ms_username");
         let token   = localStorage.getItem("token");
@@ -138,7 +149,7 @@ export default {
                 name: '',
                 provinceId: '',
                 cityId: '',
-                ranking: 0
+                ranking: 9999
             });
         const loading       = ref(true);
         const limitPictureNumber = ref(1);
@@ -169,6 +180,7 @@ export default {
                 }
             })
         }
+
         return {
             name,
             header,
@@ -225,6 +237,7 @@ export default {
 };
 </script>
 
+<style src="@wangeditor/editor/dist/css/style.css"></style>
 <style scoped>
 .school-container{
     padding: 20px;

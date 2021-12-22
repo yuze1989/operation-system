@@ -287,6 +287,16 @@ export const updateAuditCopyrightPaper = query => {
         isLogin: true
     })
 }
+// 批量删除
+// /sys/history-paper-v2/batchDelete
+export const updateDelete = query => {
+    return request({
+        url: '/sys/history-paper-v2/batchDelete',
+        method: 'post',
+        data: query,
+        isLogin: true
+    })
+}
 
 // 高分试卷详情
 // /sys/history-paper-v2/detail/{id}
