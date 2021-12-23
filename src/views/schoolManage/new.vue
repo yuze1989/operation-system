@@ -244,10 +244,10 @@ export default {
         // 获取编辑器的内容
         getContent(content){
             console.log('getContent', content)
-            let {html, json} = content 
-            console.log(JSON.stringify(json))
-            this.params.detail = html;
-            // this.params.jsonData = json
+            let {html, json} = content,
+                jsonStr      = `<ykhadmin>${JSON.stringify(json)}</ykhadmin>`;
+            this.params.detail = `${html}&&&&&&${jsonStr}`;
+            console.log(this.params)
         }
     }
 };
