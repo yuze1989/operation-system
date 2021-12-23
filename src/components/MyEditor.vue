@@ -13,6 +13,7 @@
             :editorId="editorId"
             :defaultConfig="editorConfig"
             :defaultContent="getDefaultContent" 
+            @onCreated="handleCreated"
             @onChange="handleChange"
             style="height: 500px"
         />
@@ -21,23 +22,29 @@
 
 
 <script>
-import { computed, onBeforeUnmount, onMounted } from 'vue'
+import { computed, onBeforeUnmount, onMounted, nextTick, ref } from 'vue'
 import { Editor, Toolbar, getEditor, removeEditor } from '@wangeditor/editor-for-vue'
 import {cloneDeep} from 'lodash'
 
 export default {
     props: {
-        content: ''
+        data: {
+            type: Array,
+            default: []
+        }
     },
   components: { Editor, Toolbar },
-  setup() {
+  setup(props,context) {
     const token   = localStorage.getItem("token");
 
     // 定义一个编辑器 id ，要求：全局唯一且不变！！！
     const editorId = 'wangeEditor-1'
 
+    console.log('===================', props, context)
     // 编辑将默认显示的内容
-    const defaultContent = [ /* 内容为空 */ ]
+    // const defaultContent = [ /* 内容为空 */ ]
+    // nextTick();
+    const defaultContent = props.data
     const getDefaultContent = computed(() => cloneDeep(defaultContent)) // 注意，深拷贝
 
     const toolbarConfig = {
@@ -138,6 +145,7 @@ export default {
     return {
       editorId,
       mode: 'default',
+      defaultContent,
       getDefaultContent,
       toolbarConfig,
       editorConfig,
@@ -152,11 +160,14 @@ export default {
     };
   },
   methods: {
+      handleCreated(editor){
+          console.log('handleCreated', editor)
+      },
       handleChange(editor) {
         console.log('change:', editor.children);
         console.log('change:', editor.getHtml());
         // editor.txt.html(this.content)
-        console.log(this.content)
+        console.log(this.data)
         let _html = editor.getHtml(),
             _json = editor.children
         this.$emit('getEditorContent', {html: _html, json: _json})

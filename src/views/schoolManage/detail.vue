@@ -42,7 +42,7 @@
                         </el-col>
                         <el-col :span="16">
                             <!-- <el-input type="textarea" v-model="params.description" @input="changeValue" :autosize="{ minRows: 4}" placeholder="请输入内容" ></el-input> -->
-                            <Editor :content="params.detail"></Editor>
+                            <Editor v-if="isEditorShow" :data="contentData" @getEditorContent="getContent"></Editor>
                         </el-col>
                     </el-row>
                     <el-row>
@@ -55,11 +55,16 @@
                                 <el-upload :class="{'upload-display': uploadIsDisabled}" class="disUoloadSty"
                                     action="https://test-ykh.msjsol.com/sys/file/imageUpload"
                                     list-type="picture-card"
+                                    :file-list="logoFile"
                                     :headers="header" :limit="limitPictureNumber"
                                     :on-success="handleSuccess"
+                                    :on-preview="handlePreview"
                                     :on-remove="handleRemove">
                                     <i class="el-icon-plus"></i>
                                 </el-upload>
+                                <el-dialog v-model="dialogVisible">
+                                    <img width="100%" :src="dialogImageUrl" alt="">
+                                </el-dialog>
                             </div>
                         </el-col>
                     </el-row>
@@ -85,7 +90,7 @@
 <script>
 import { reactive, ref, toRefs, onMounted, onActivated } from "vue";
 import { useRouter } from 'vue-router';
-import { getCity, getSchoolType, createSchool, areaList, schoolDetail } from '../../api/school.js'
+import { getCity, getSchoolType, updateSchool, schoolDetail } from '../../api/school.js'
 import Editor from '@/components/MyEditor.vue'
 export default {
     name: "logs",
@@ -99,24 +104,30 @@ export default {
         let header = ref({
             SYS_TOKEN: token
         })
+        let isEditorShow = ref(false)
+        let contentData  = ref([])
+        let logoFile  = ref([])
         const objData = reactive({
             params: {
                 classifyId: '',
                 description: '',
-                detail: '',
+                detail: [],
                 id: 0,
                 logo: '',
                 name: '',
                 ranking: 0
             }
         });
+        const dialogs = reactive({
+            dialogVisible: false,
+            dialogImageUrl: ''
+        })
         const loading       = ref(true);
         const limitPictureNumber = ref(1);
         const schoolType    = ref([])
         const provinceList  = ref([])
         const cityList      = ref([])
         const uploadIsDisabled = ref(false)
-        const fileList = ref(false)
 
         getSchoolType().then(res => {
             console.log('getSchoolType', res)
@@ -136,8 +147,18 @@ export default {
             schoolDetail(id).then(res => {
                 let {code, data , msg} = res
                 if(code === 200) {
+                    let {detail} = data
+                    // &&&&&&
+                    console.log('object', detail.split('&&&&&&'))
+                    let _str = detail.split('&&&&&&')[1],
+                        _detail = JSON.parse(_str.match(/<ykhadmin>(.*?)<\/ykhadmin>/g).map(item => {
+                        return item.replace(/<\/?ykhadmin>/g, '')
+                    })[0])
                     objData.params = data
                     objData.params.classifyId = data.classifyId.split(',')
+                    contentData.value = _detail || []
+                    isEditorShow.value = true
+                    logoFile.value = [{name: data.id, url: data.logo}]
                 }
             })
         }
@@ -151,6 +172,10 @@ export default {
             cityList,
             loading,
             uploadIsDisabled,
+            isEditorShow,
+            contentData,
+            logoFile,
+            ...toRefs(dialogs),
             ...toRefs(objData)
         };
     },
@@ -168,6 +193,11 @@ export default {
             this.params.logo = response.data
             this.uploadIsDisabled = true
         },
+        // 预览图片
+        handlePreview(file) {
+            this.dialogImageUrl = file.url;
+            this.dialogVisible = true;
+        },
         handleRemove(file){
             this.uploadIsDisabled = false
         },
@@ -183,14 +213,23 @@ export default {
         },
         saveHandle() {
             console.log(this.params)
-            createSchool({...this.params, detail: this.params.description}).then(res => {
+            let {classifyId, description, detail, id, logo, name, ranking} = this.params
+            updateSchool({classifyId: classifyId.join(','), description, detail, id, logo, name, ranking}).then(res => {
                 console.log(res)
                 let {code, msg} = res
                 if(code === 200) {
-                    this.$message({type: 'success', message: '添加成功'})
+                    this.$message({type: 'success', message: '修改成功'})
                     this.router.push('/schoolManage')
                 }
             })
+        },
+        // 获取编辑器的内容
+        getContent(content){
+            console.log('getContent', content)
+            let {html, json} = content,
+                jsonStr      = `<ykhadmin>${JSON.stringify(json)}</ykhadmin>`;
+            this.params.detail = `${html}&&&&&&${jsonStr}`;
+            console.log(this.params)
         }
     }
 };
@@ -263,4 +302,8 @@ export default {
   /* .disUoloadSty .el-upload.el-upload--picture-card{
       display: none;
   } */
+  .el-dialog img{
+      width: 100%;
+      /* height: 100%; */
+  }
 </style>

@@ -226,20 +226,6 @@ export default {
             console.log(e)
             console.log('changeSelector', this.params)
         },
-        // getPaperList(page) {
-        //     this.loading = true;
-        //     paperList({
-        //         ...this.params,
-        //         current: page || 1
-        //     }).then(res => {
-        //         this.loading = false
-        //         console.log('getSubjectList', res)
-        //         let {pages, records, total} = res.data
-        //         this.tableData = records
-        //         this.pageTotal = pages
-        //         this.listTotal = total
-        //     })
-        // },
         // 查询
         searchPaper(){
             this.getPaperList()
@@ -289,7 +275,7 @@ export default {
             console.log('this.multipleSelection', this.multipleSelection)
             let query = []
             this.multipleSelection.forEach(item => {
-                query.push(Number(item.id))
+                query.push(String(item.id))
             })
             query.length && this.$prompt('请输入最新的价格', '提示', {
                 confirmButtonText: '确定',
@@ -315,7 +301,7 @@ export default {
             console.log('this.multipleSelection', this.multipleSelection)
             let query = []
             this.multipleSelection.forEach(item => {
-                query.push(Number(item.id))
+                query.push(String(item.id))
             })
             query.length && this.$prompt('请输入最新的版权信息', '提示', {
                 confirmButtonText: '确定',
@@ -339,7 +325,7 @@ export default {
             console.log('this.multipleSelection', this.multipleSelection)
             let query = []
             this.multipleSelection.forEach(item => {
-                query.push(Number(item.id))
+                query.push(String(item.id))
             })
             console.log(query)
             query.length && this.$confirm('确定删除?', '提示', {

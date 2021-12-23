@@ -1007,9 +1007,9 @@ vuex@^4.0.2:
   dependencies:
     "@vue/devtools-api" "^6.0.0-beta.11"
 
-wangeditor@^4.7.4:
+wangeditor@^4.7.10:
   version "4.7.10"
-  resolved "https://registry.yarnpkg.com/wangeditor/-/wangeditor-4.7.10.tgz#2b9ca3a476d992ec711dbc8335a42b93b2f99fc8"
+  resolved "https://registry.npmmirror.com/wangeditor/download/wangeditor-4.7.10.tgz#2b9ca3a476d992ec711dbc8335a42b93b2f99fc8"
   integrity sha512-cUlPuPMaie0b4YqrA5VOu7myRiIn5+xp2aspS/PQLgmGuPum5Y037czT6HyOnDaSZ9U6wXsKh7nNYEnVsJAPhg==
   dependencies:
     "@babel/runtime" "^7.11.2"
