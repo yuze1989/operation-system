@@ -31,6 +31,28 @@ export const getCity = query => {
         isLogin: true
     })
 }
+// 编辑高校   
+// 高校详情
+// /sys/university/detail/{id}
+export const schoolDetail = id => {
+    return request({
+        url: `/sys/university/detail/${id}`,
+        method: 'get',
+        isLogin: true
+    })
+}
+
+// 更新高校
+// /sys/university/modify
+export const updateSchool = query => {
+    return request({
+        url: '/sys/university/modify',
+        method: 'post',
+        data: query,
+        isLogin: true
+    })
+}
+
 
 // 高校分类
 // /sys/university/classify

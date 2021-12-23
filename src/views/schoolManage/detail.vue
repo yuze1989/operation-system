@@ -14,18 +14,10 @@
                     </el-row>
                     <el-row>
                         <el-col :span="4" :offset="4">
-                            高校网站地址：
-                        </el-col>
-                        <el-col :span="10">
-                            <el-input v-model="params.url" @input="changeValue" placeholder="请输入高校网址" ></el-input>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="4" :offset="4">
                             高校分类：
                         </el-col>
                         <el-col :span="10">
-                            <el-select v-model="params.classifyId" clearable
+                            <el-select v-model="params.classifyId" clearable multiple 
                                 name="type" @change="changeSelector($event, 'classifyId')" placeholder="请选择">
                                 <el-option
                                     v-for="(item, index) in schoolType"
@@ -38,43 +30,19 @@
                     </el-row>
                     <el-row>
                         <el-col :span="4" :offset="4">
-                            高校地址：
+                            高校简介：
                         </el-col>
                         <el-col :span="10">
-                            <el-select v-model="params.provinceId" clearable
-                                name="type" @change="changeSelector($event, 'provinceId')" placeholder="请选择省">
-                                <el-option
-                                    v-for="(item, index) in provinceList"
-                                    :key="index"
-                                    :label="item.name"
-                                    :value="item.id">
-                                </el-option>
-                            </el-select>
-                            <el-select v-model="params.cityId" clearable
-                                name="type" @change="changeSelector($event)" placeholder="请选择市">
-                                <el-option
-                                    v-for="(item, index) in cityList"
-                                    :key="index"
-                                    :label="item.name"
-                                    :value="item.id">
-                                </el-option>
-                            </el-select>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="4" :offset="4">
-                            高校详细地址：
-                        </el-col>
-                        <el-col :span="10">
-                            <el-input v-model="params.address" @input="changeValue" placeholder="请输入内容" ></el-input>
+                            <el-input type="textarea" v-model="params.description" @input="changeValue" :autosize="{ minRows: 4}" placeholder="请输入内容" ></el-input>
                         </el-col>
                     </el-row>
                     <el-row>
                         <el-col :span="4" :offset="4">
                             高校简介：
                         </el-col>
-                        <el-col :span="10">
-                            <el-input type="textarea" v-model="params.description" @input="changeValue" :autosize="{ minRows: 4}" placeholder="请输入内容" ></el-input>
+                        <el-col :span="16">
+                            <!-- <el-input type="textarea" v-model="params.description" @input="changeValue" :autosize="{ minRows: 4}" placeholder="请输入内容" ></el-input> -->
+                            <Editor :content="params.detail"></Editor>
                         </el-col>
                     </el-row>
                     <el-row>
@@ -117,9 +85,13 @@
 <script>
 import { reactive, ref, toRefs, onMounted, onActivated } from "vue";
 import { useRouter } from 'vue-router';
-import { getCity, getSchoolType, createSchool, areaList } from '../../api/school.js'
+import { getCity, getSchoolType, createSchool, areaList, schoolDetail } from '../../api/school.js'
+import Editor from '@/components/MyEditor.vue'
 export default {
     name: "logs",
+    components: {
+        Editor
+    },
     setup() {
         let name   = localStorage.getItem("ms_username");
         let token   = localStorage.getItem("token");
@@ -127,19 +99,17 @@ export default {
         let header = ref({
             SYS_TOKEN: token
         })
-        const params = reactive({
-                address: '',
+        const objData = reactive({
+            params: {
                 classifyId: '',
-                url: '',
                 description: '',
                 detail: '',
                 id: 0,
                 logo: '',
                 name: '',
-                provinceId: '',
-                cityId: '',
                 ranking: 0
-            });
+            }
+        });
         const loading       = ref(true);
         const limitPictureNumber = ref(1);
         const schoolType    = ref([])
@@ -155,22 +125,19 @@ export default {
         })
         onMounted(() => {
             let query = router.currentRoute.value.query
-            getAreaList()
+            getSchoolDetail(query.id);
         })
         onActivated(() => {
             let query = router.currentRoute.value.query
-            getAreaList()
+            getSchoolDetail(query.id);
         })
-        // 新省市区列表
-        let getAreaList = (pid, type) => {
-            // let data = type ? {id: pid || 0} : {pid: pid || 0}
-            areaList({pid: pid || 0}).then(res => {
-                console.log('areaList', res)
-                let {code, data, msg} = res;
-                if(type) {
-                    cityList.value = data
-                } else {
-                    provinceList.value = data
+        // 高校详情
+        let getSchoolDetail = (id) => {
+            schoolDetail(id).then(res => {
+                let {code, data , msg} = res
+                if(code === 200) {
+                    objData.params = data
+                    objData.params.classifyId = data.classifyId.split(',')
                 }
             })
         }
@@ -178,14 +145,13 @@ export default {
             name,
             header,
             router,
-            params,
             limitPictureNumber,
             schoolType,
             provinceList,
             cityList,
             loading,
             uploadIsDisabled,
-            getAreaList
+            ...toRefs(objData)
         };
     },
     methods: {

@@ -26,6 +26,9 @@ import { Editor, Toolbar, getEditor, removeEditor } from '@wangeditor/editor-for
 import {cloneDeep} from 'lodash'
 
 export default {
+    props: {
+        content: ''
+    },
   components: { Editor, Toolbar },
   setup() {
     const token   = localStorage.getItem("token");
@@ -152,6 +155,8 @@ export default {
       handleChange(editor) {
         console.log('change:', editor.children);
         console.log('change:', editor.getHtml());
+        // editor.txt.html(this.content)
+        console.log(this.content)
         let _html = editor.getHtml(),
             _json = editor.children
         this.$emit('getEditorContent', {html: _html, json: _json})
