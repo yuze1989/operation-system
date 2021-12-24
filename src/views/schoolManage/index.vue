@@ -22,8 +22,8 @@
                             </el-select>
                         </el-col>
                     </el-row>
-                    <el-row :gutter="0">
-                        <el-col :span="10" :offset="6">
+                    <el-row :gutter="0" type="flex" justify="center">
+                        <!-- <el-col :span="10" :offset="6">
                             高校地址：
                             <el-select v-model="params.province" clearable
                                 @change="changeSelector($event, 'province')" placeholder="请选择省">
@@ -43,10 +43,10 @@
                                     :value="item.id">
                                 </el-option>
                             </el-select>
-                        </el-col>
-                        <el-col :span="4" :offset="1">
+                        </el-col> -->
+                        <!-- <el-col :span="4" :offset="10"> -->
                             <el-button type="primary" @click="search">查询</el-button>
-                        </el-col>
+                        <!-- </el-col> -->
                     </el-row>
                 </div>
                 <el-button type="primary" @click="createSchool">新增高校</el-button>

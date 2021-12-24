@@ -143,6 +143,7 @@ export default {
                 classifyId: '',
                 url: '',
                 description: '',
+                configJson: '',
                 detail: '',
                 id: 0,
                 logo: '',
@@ -244,9 +245,9 @@ export default {
         // 获取编辑器的内容
         getContent(content){
             console.log('getContent', content)
-            let {html, json} = content,
-                jsonStr      = `<ykhadmin>${JSON.stringify(json)}</ykhadmin>`;
-            this.params.detail = `${html}&&&&&&${jsonStr}`;
+            let {html, json} = content;
+            this.params.detail = html;
+            this.params.configJson = JSON.stringify(json);
             console.log(this.params)
         }
     }

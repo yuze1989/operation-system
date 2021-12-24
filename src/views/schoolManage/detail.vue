@@ -111,7 +111,8 @@ export default {
             params: {
                 classifyId: '',
                 description: '',
-                detail: [],
+                configJson: '',
+                detail: '',
                 id: 0,
                 logo: '',
                 name: '',
@@ -147,16 +148,15 @@ export default {
             schoolDetail(id).then(res => {
                 let {code, data , msg} = res
                 if(code === 200) {
-                    let {detail} = data
                     // &&&&&&
-                    console.log('object', detail.split('&&&&&&'))
-                    let _str = detail.split('&&&&&&')[1],
-                        _detail = JSON.parse(_str.match(/<ykhadmin>(.*?)<\/ykhadmin>/g).map(item => {
-                        return item.replace(/<\/?ykhadmin>/g, '')
-                    })[0])
+                    // console.log('object', detail.split('&&&&&&'))
+                    // let _str = detail.split('&&&&&&')[1],
+                    //     _detail = JSON.parse(_str.match(/<ykhadmin>(.*?)<\/ykhadmin>/g).map(item => {
+                    //     return item.replace(/<\/?ykhadmin>/g, '')
+                    // })[0])
                     objData.params = data
                     objData.params.classifyId = data.classifyId.split(',')
-                    contentData.value = _detail || []
+                    contentData.value = JSON.parse(data.configJson)
                     isEditorShow.value = true
                     logoFile.value = [{name: data.id, url: data.logo}]
                 }
@@ -213,8 +213,8 @@ export default {
         },
         saveHandle() {
             console.log(this.params)
-            let {classifyId, description, detail, id, logo, name, ranking} = this.params
-            updateSchool({classifyId: classifyId.join(','), description, detail, id, logo, name, ranking}).then(res => {
+            let {classifyId, description, configJson, detail, id, logo, name, ranking} = this.params
+            updateSchool({classifyId: classifyId.join(','), configJson, description, detail, id, logo, name, ranking}).then(res => {
                 console.log(res)
                 let {code, msg} = res
                 if(code === 200) {
@@ -226,9 +226,10 @@ export default {
         // 获取编辑器的内容
         getContent(content){
             console.log('getContent', content)
-            let {html, json} = content,
-                jsonStr      = `<ykhadmin>${JSON.stringify(json)}</ykhadmin>`;
-            this.params.detail = `${html}&&&&&&${jsonStr}`;
+            let {html, json} = content;
+            console.log(html, JSON.stringify(json))
+            this.params.detail = html
+            this.params.configJson = JSON.stringify(json)
             console.log(this.params)
         }
     }
