@@ -100,7 +100,7 @@ export default {
                 console.log(res)
                 if(res.code === 200) {
                     this.router.push('/examination/sideConfigure')
-                    this.$message({ type: 'success', message: '删除成功!' })
+                    this.$message({ type: 'success', message: '保存成功!' })
                 }
             })
         }

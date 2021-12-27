@@ -189,7 +189,7 @@
                                 type="textarea"
                                 placeholder="请输入内容"
                                 :autosize="{ minRows: 4}"
-                                v-model="item.remarks">
+                                v-model="item.remark">
                             </el-input>
                         </el-col>
                     </el-row>
@@ -244,7 +244,7 @@ export default {
                 examDate: '',
                 content: '',
                 imgs: [],
-                remarks: ''
+                remark: ''
             }]
         })
         
@@ -337,7 +337,7 @@ export default {
                 examDate: '',
                 content: '',
                 imgs: [],
-                remarks: ''
+                remark: ''
             })
         },
         deleteSubject(e) {

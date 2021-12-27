@@ -30,7 +30,7 @@
                     </el-row>
                     <el-row>
                         <el-col :span="4" :offset="4">
-                            高校简介：
+                            一句话简介：
                         </el-col>
                         <el-col :span="10">
                             <el-input type="textarea" v-model="params.description" @input="changeValue" :autosize="{ minRows: 4}" placeholder="请输入内容" ></el-input>
