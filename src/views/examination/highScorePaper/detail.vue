@@ -39,7 +39,7 @@
                                         <el-input type="text" placeholder="描述" v-model="itl.description"></el-input>
                                     </div>
                                     <el-upload v-show="!imgs.length"
-                                        action="https://test-ykh.msjsol.com/sys/file/imageUpload"                                    
+                                        action="/sys/file/imageUpload"                                    
                                         :headers="header" multiple :limit="limitPictureNumber"
                                         list-type="picture-card"
                                         :on-success="handleSuccess"

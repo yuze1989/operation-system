@@ -78,7 +78,7 @@ export default {
 
     // 配置图片
     editorConfig.MENU_CONF['uploadImage'] = {
-        server: 'https://test-ykh.msjsol.com/sys/file/imageUpload',
+        server: '/sys/file/imageUpload',
         fieldName: 'file',
         // 自定义增加 http  header
         headers: {

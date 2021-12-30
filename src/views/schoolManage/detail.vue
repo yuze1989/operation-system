@@ -53,7 +53,7 @@
                             <div>
                                     <!-- :disabled="uploadIsDisabled" -->
                                 <el-upload :class="{'upload-display': uploadIsDisabled}" class="disUoloadSty"
-                                    action="https://test-ykh.msjsol.com/sys/file/imageUpload"
+                                    action="/sys/file/imageUpload"
                                     list-type="picture-card"
                                     :file-list="logoFile"
                                     :headers="header" :limit="limitPictureNumber"

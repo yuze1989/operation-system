@@ -94,7 +94,7 @@
                             <div>
                                     <!-- :disabled="uploadIsDisabled" -->
                                 <el-upload :class="{'upload-display': uploadIsDisabled}" class="disUoloadSty"
-                                    action="https://test-ykh.msjsol.com/sys/file/imageUpload"
+                                    action="/sys/file/imageUpload"
                                     list-type="picture-card"
                                     :headers="header" :limit="limitPictureNumber"
                                     :on-success="handleSuccess"

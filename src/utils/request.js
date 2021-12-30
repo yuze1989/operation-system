@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ElMessage } from "element-plus";
 const service = axios.create({
-    baseURL: 'https://test-ykh.msjsol.com',
+    baseURL: '',
     timeout: 5000,
     headers: {'content-type': 'application/json'}
 });
